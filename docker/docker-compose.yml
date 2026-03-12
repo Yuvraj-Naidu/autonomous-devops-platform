@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: devops-postgres
+    environment:
+      POSTGRES_USER: devops
+      POSTGRES_PASSWORD: devops
+      POSTGRES_DB: devops_platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../services/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ../services/backend-fastapi
+    container_name: backend-fastapi
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_USER: devops
+      DB_PASSWORD: devops
+      DB_NAME: devops_platform
