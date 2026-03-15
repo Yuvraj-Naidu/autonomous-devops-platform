@@ -1,3 +1,7 @@
-# Autonomous DevOps Platform
+## Documentation
 
-A production-style DevOps platform evolving from Docker-based CI/CD to Terraform infrastructure automation, Kubernetes orchestration, and AI-assisted operations.
+Detailed project documentation is available in the docs directory.
+
+- Architecture overview
+- Microservices design
+- Local setup guide
