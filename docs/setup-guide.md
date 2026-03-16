@@ -36,3 +36,38 @@ http://localhost:8000/health
 Database check:
 
 http://localhost:8000/db-check
+
+## Frontend Service
+
+Navigate to the frontend directory:
+
+cd services/frontend-react
+
+Install dependencies:
+
+npm install
+
+Start the development server:
+
+npm start
+
+Application will run on:
+
+http://localhost:3000
+
+## Running the Full Platform
+
+Navigate to the docker directory:
+
+cd docker
+
+Start all services:
+
+docker compose up --build
+
+Services started:
+
+- React frontend → http://localhost:3000
+- FastAPI backend → http://localhost:8000
+- PostgreSQL database → port 5432
+

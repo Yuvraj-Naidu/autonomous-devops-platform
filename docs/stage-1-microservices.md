@@ -37,3 +37,16 @@ This command builds the backend image and starts both containers.
 Docker Compose automatically creates a shared network.
 
 Services communicate using service names instead of IP addresses.
+
+## Docker Compose Orchestration
+
+The microservices stack is orchestrated using Docker Compose.
+
+Services included:
+
+- React frontend container
+- FastAPI backend container
+- PostgreSQL database container
+
+Docker Compose provides internal networking, service discovery, and simplified multi-container management.
+
