@@ -26,3 +26,11 @@ services:
       DB_USER: devops
       DB_PASSWORD: devops
       DB_NAME: devops_platform
+
+  frontend:
+    build: ../services/frontend-react
+    container_name: frontend-react
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
