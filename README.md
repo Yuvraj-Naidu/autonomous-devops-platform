@@ -7,3 +7,4 @@ Detailed project documentation is available in the docs directory.
 - Local setup guide
 - Frontend service setup
 - Docker Compose platform orchestration
+- Frontend to backend API integration
