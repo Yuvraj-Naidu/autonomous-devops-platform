@@ -71,3 +71,13 @@ Services started:
 - FastAPI backend → http://localhost:8000
 - PostgreSQL database → port 5432
 
+## Accessing the Dashboard
+
+Open the frontend UI:
+
+http://localhost:3000
+
+The dashboard displays:
+
+- Backend health status
+- Database connection status
