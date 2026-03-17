@@ -50,3 +50,16 @@ Services included:
 
 Docker Compose provides internal networking, service discovery, and simplified multi-container management.
 
+## Frontend-Backend Integration
+
+The React frontend communicates with the FastAPI backend via REST APIs.
+
+Key endpoints:
+
+- /health → backend health status
+- /db-check → database connectivity
+
+Important considerations:
+
+- API calls use localhost since requests originate from the browser
+- CORS is enabled in FastAPI to allow cross-origin communication
