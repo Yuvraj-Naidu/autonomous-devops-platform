@@ -8,3 +8,4 @@ Detailed project documentation is available in the docs directory.
 - Frontend service setup
 - Docker Compose platform orchestration
 - Frontend to backend API integration
+- CI pipeline for automated Docker build and push
