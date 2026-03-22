@@ -85,7 +85,7 @@ backend → postgres:5432
 [ PostgreSQL Database ]
 ```
 
-## Stage 4 — CI Pipeline (Day 21)
+## Stage 4 — CI Pipeline 
 
 ```
 GitHub (code push)
