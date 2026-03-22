@@ -61,10 +61,10 @@ docker-compose
 
 ### Internal Networking
 
-
+```
 frontend → backend:8000
 backend → postgres:5432
-
+```
 
 ### Key Characteristics
 - Single command startup → docker compose up
@@ -85,12 +85,29 @@ backend → postgres:5432
 [ PostgreSQL Database ]
 ```
 
+## Stage 4 — CI Pipeline (Day 21)
+
+```
+GitHub (code push)
+↓
+GitHub Actions (CI)
+↓
+Build Docker Images
+↓
+Push to Docker Hub
+```
+
+### Key Characteristics
+- Automated builds on every commit
+- Docker images pushed to registry
+- Eliminates manual build process
+
 ### API Endpoints
 
-
+```
 GET /health → Backend status
 GET /db-check → Database connectivity
-
+```
 
 ### Key Concepts
 - Real-time UI updates
