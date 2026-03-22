@@ -63,3 +63,15 @@ Important considerations:
 
 - API calls use localhost since requests originate from the browser
 - CORS is enabled in FastAPI to allow cross-origin communication
+
+## CI Pipeline Integration
+
+The project uses GitHub Actions to automate the build and push process.
+
+Workflow:
+
+- Code push triggers pipeline
+- Docker images are built for frontend and backend
+- Images are pushed to Docker Hub
+
+This ensures a consistent and automated build process.
