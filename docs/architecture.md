@@ -1,12 +1,12 @@
-# 🏗️ Autonomous DevOps Platform — Architecture Evolution
+# Autonomous DevOps Platform — Architecture Evolution
 
 This document represents the evolution of the system from local development to a containerized, orchestrated, and API-integrated DevOps platform.
 
 ---
 
-## 🟢 Stage 0 — Local Development
+## Stage 0 — Local Development
 
-
+```
 [ Browser ]
 ↓
 [ React App (npm start) ]
@@ -14,7 +14,7 @@ This document represents the evolution of the system from local development to a
 [ FastAPI Backend (uvicorn) ]
 ↓
 [ PostgreSQL (local DB) ]
-
+```
 
 ### Key Characteristics
 - Services run independently on local machine
@@ -23,9 +23,9 @@ This document represents the evolution of the system from local development to a
 
 ---
 
-## 🟡 Stage 1 — Containerization (Docker)
+## Stage 1 — Containerization (Docker)
 
-
+```
 [ Browser ]
 ↓
 [ React Container ]
@@ -33,7 +33,7 @@ This document represents the evolution of the system from local development to a
 [ FastAPI Container ]
 ↓
 [ PostgreSQL Container ]
-
+```
 
 ### Key Characteristics
 - Each service packaged as Docker image
@@ -42,9 +42,9 @@ This document represents the evolution of the system from local development to a
 
 ---
 
-## 🟠 Stage 2 — Multi-Service Orchestration (Docker Compose)
+## Stage 2 — Multi-Service Orchestration (Docker Compose)
 
-
+```
 docker-compose
 ├── frontend (React)
 ├── backend (FastAPI)
@@ -57,7 +57,7 @@ docker-compose
 [ backend:8000 ]
 ↓
 [ postgres:5432 ]
-
+```
 
 ### Internal Networking
 
@@ -73,9 +73,9 @@ backend → postgres:5432
 
 ---
 
-## 🔵 Stage 3 — API Integration (Real Dashboard)
+## Stage 3 — API Integration (Real Dashboard)
 
-
+```
 [ Browser (User) ]
 ↓
 [ React Dashboard UI ]
@@ -83,7 +83,7 @@ backend → postgres:5432
 [ FastAPI Backend API ]
 ↓
 [ PostgreSQL Database ]
-
+```
 
 ### API Endpoints
 
@@ -99,15 +99,15 @@ GET /db-check → Database connectivity
 
 ---
 
-## 🔴 Networking Reality (Critical Understanding)
+## Networking Reality (Critical Understanding)
 
-### ❌ Incorrect
+### Incorrect
 
 
 Browser → backend:8000 (fails)
 
 
-### ✅ Correct
+### Correct
 
 
 Browser → localhost:8000 → Docker → backend container
@@ -122,18 +122,17 @@ From Browser/User → use localhost or public IP
 
 ---
 
-## 🟣 Current Architecture (Day 20)
+## Current Architecture (Day 20)
 
-
-Browser (http://localhost:3000
-)
+```
+Browser (http://localhost:3000)
 ↓
 React Frontend (Container)
 ↓
 FastAPI Backend (Container)
 ↓
 PostgreSQL Database (Container)
-
+```
 
 ---
 
@@ -159,7 +158,7 @@ docker compose up --build -d
 
 ## 🚀 Next Evolution
 
-
+```
 GitHub Push
 ↓
 CI/CD Pipeline (GitHub Actions)
@@ -171,3 +170,4 @@ EC2 Deployment
 Kubernetes / Load Balancer
 ↓
 AI DevOps Layer
+```
