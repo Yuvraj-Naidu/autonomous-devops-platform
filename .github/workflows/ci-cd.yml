@@ -1,29 +1,53 @@
 name: DevOps Platform CI
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
+    build-and-push:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
 
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            - name: Login to Docker Hub
+              run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build Backend Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi ./services/backend-fastapi
+            - name: Build Backend Image
+              run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi ./services/backend-fastapi
 
-      - name: Build Frontend Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-react ./services/frontend-react
+            - name: Build Frontend Image
+              run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-react ./services/frontend-react
 
-      - name: Push Backend Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
+            - name: Push Backend Image
+              run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
 
-      - name: Push Frontend Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react
+            - name: Push Frontend Image
+              run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react
+
+    deploy:
+        needs: build-and-push
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Deploy to EC2
+              uses: appleboy/ssh-action@v1.0.0
+              with:
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.EC2_USER }}
+                  key: ${{ secrets.EC2_SSH_KEY }}
+                  script: |
+                      docker stop frontend-react || true
+                      docker stop backend-fastapi || true
+
+                      docker rm frontend-react || true
+                      docker rm backend-fastapi || true
+
+                      docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
+                      docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react
+
+                      docker run -d -p 8000:8000 --name backend-fastapi ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
+                      docker run -d -p 3000:3000 --name frontend-react ${{ secrets.DOCKER_USERNAME }}/frontend-react
