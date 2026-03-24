@@ -9,3 +9,4 @@ Detailed project documentation is available in the docs directory.
 - Docker Compose platform orchestration
 - Frontend to backend API integration
 - CI pipeline for automated Docker build and push
+- EC2 deployment automated using GitHub Actions (CI/CD)
