@@ -10,3 +10,4 @@ Detailed project documentation is available in the docs directory.
 - Frontend to backend API integration
 - CI pipeline for automated Docker build and push
 - EC2 deployment automated using GitHub Actions (CI/CD)
+- Implemented port-based deployment strategy to reduce downtime during container updates
