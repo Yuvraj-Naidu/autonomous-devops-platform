@@ -48,6 +48,14 @@ jobs:
             docker run -d -p 8001:8000 --name backend-new ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
             sleep 10
 
+            # validate
+            docker ps | grep backend-new
+
+            if [ $? -ne 0 ]; then
+              echo "Backend failed"
+              exit 1
+            fi
+
             # DEBUG
             docker ps
             docker stop backend-fastapi || true
