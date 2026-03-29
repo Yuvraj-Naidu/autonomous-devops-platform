@@ -60,6 +60,16 @@ jobs:
             sleep 10
             # DEBUG: show running containers
             docker ps
+
+            # ✅ VALIDATE new container
+            docker ps | grep frontend-new
+
+            # If NOT running → EXIT (do NOT kill old)
+            if [ $? -ne 0 ]; then
+              echo "New container failed. Aborting deploy."
+              exit 1
+            fi
+
             # If success → remove old
             docker stop frontend-react || true
             docker rm frontend-react || true
