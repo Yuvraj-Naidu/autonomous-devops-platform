@@ -44,6 +44,9 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
             docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react
 
+            docker rm -f backend-new || true
+            docker rm -f frontend-new || true
+
             # ---------------- BACKEND ----------------
             docker run -d -p 8001:8000 --name backend-new ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
             sleep 10
