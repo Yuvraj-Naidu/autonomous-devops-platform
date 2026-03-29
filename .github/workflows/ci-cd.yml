@@ -48,14 +48,21 @@ jobs:
             docker run -d -p 8001:8000 --name backend-new ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
             sleep 10
 
+            # DEBUG
+            docker ps
             docker stop backend-fastapi || true
             docker rm backend-fastapi || true
+
             docker rename backend-new backend-fastapi
 
             # ---------------- FRONTEND ----------------
             docker run -d -p 3001:3000 --name frontend-new ${{ secrets.DOCKER_USERNAME }}/frontend-react
             sleep 10
-
+            # DEBUG: show running containers
+            docker ps
+            # If success → remove old
             docker stop frontend-react || true
             docker rm frontend-react || true
+
+            # Rename new → stable name
             docker rename frontend-new frontend-react
