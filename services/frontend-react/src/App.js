@@ -19,6 +19,7 @@ function App() {
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>Autonomous DevOps Platform 🚀</h1>
+      <h1>Version 2 - Deployment Test</h1>
       <h2>Backend Status: {health}</h2>
       <h2>Database Status: {dbStatus}</h2>
     </div>
