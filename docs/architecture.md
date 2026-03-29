@@ -102,75 +102,79 @@ Push to Docker Hub
 - Docker images pushed to registry
 - Eliminates manual build process
 
-### API Endpoints
+---
 
-```
-GET /health → Backend status
-GET /db-check → Database connectivity
-```
+## Stage 5 — Deployment Strategy (Zero-Downtime Release)
 
-### Key Concepts
-- Real-time UI updates
-- REST API communication
-- Frontend-backend integration
+Port-Based Deployment Model
+
+Current Version (Live Traffic)  
+- frontend → port 3000  
+- backend → port 8000  
+
+New Version (Candidate Release)  
+- frontend → port 3001  
+- backend → port 8001  
+
+Deployment Flow
+
+1. Deploy new containers on alternate ports  
+2. Validate backend → GET /health, GET /db-check  
+3. Validate frontend UI accessibility  
+4. Ensure containers are stable and running  
+5. Switch traffic to new version  
+6. Remove old containers  
+7. Clean up unused containers and ports  
+
+Key Characteristics
+- Near zero downtime deployments  
+- Safe validation before release  
+- Rollback possible (old version still active during validation)  
+- Prevents broken deployments from affecting users  
 
 ---
 
-## Networking Reality (Critical Understanding)
-
-### Incorrect
-
-
-Browser → backend:8000 (fails)
-
-
-### Correct
-
-
-Browser → localhost:8000 → Docker → backend container
-
-
-### Rule
-
-
-Inside Docker → use service names (backend, postgres)
-From Browser/User → use localhost or public IP
-
-
----
-
-## Current Architecture (Day 20)
+## Updated Current Architecture (Day 23)
 
 ```
 Browser (http://localhost:3000)
 ↓
-React Frontend (Container)
+React Frontend (Container : 3000)
 ↓
-FastAPI Backend (Container)
+FastAPI Backend (Container : 8000)
 ↓
-PostgreSQL Database (Container)
+PostgreSQL Database (Container : 5432)
+
+Parallel Deployment Layer
+
+New Version (Validation Phase)
+
+frontend → http://localhost:3001
+backend → http://localhost:8001
+```
+---
+
+## System Control
+```
+docker compose up --build -d
 ```
 
----
-
-## ⚙️ System Control
-
-
-docker compose up --build -d
-
+Deployment (Alternate Ports handled manually/scripted)
 
 ---
 
-## 🔥 What This Architecture Demonstrates
-
-- Microservices architecture
-- Docker containerization
-- Docker Compose orchestration
-- Service-to-service communication
-- API-driven frontend integration
-- Real-time system visibility
-- Networking concepts (Docker vs Browser)
-
+## What This Architecture Demonstrates
+```
+- Microservices architecture  
+- Docker containerization  
+- Docker Compose orchestration  
+- Service-to-service communication  
+- API-driven frontend integration  
+- CI pipeline automation (GitHub Actions)  
+- Real-time system visibility  
+- Docker networking concepts (internal vs external)  
+- Zero-downtime deployment strategy (port-based validation)  
+```
 ---
 
 ## 🚀 Next Evolution
@@ -178,13 +182,16 @@ docker compose up --build -d
 ```
 GitHub Push
 ↓
-CI/CD Pipeline (GitHub Actions)
+CI Pipeline (GitHub Actions - Implemented)
 ↓
 Docker Hub (Image Registry)
 ↓
-EC2 Deployment
+CD Pipeline (Automated EC2 Deployment)
 ↓
-Kubernetes / Load Balancer
+Reverse Proxy / Load Balancer (Nginx)
 ↓
-AI DevOps Layer
+Kubernetes (Scaling & Orchestration)
+↓
+AI DevOps Layer (Self-healing + Intelligent Deployments)
 ```
+
