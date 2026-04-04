@@ -5,12 +5,12 @@ function App() {
   const [dbStatus, setDbStatus] = useState("Loading...");
 
   useEffect(() => {
-    fetch("http://localhost:8000/health")
+    fetch("/api/health")
       .then(res => res.json())
       .then(data => setHealth(data.status))
       .catch(() => setHealth("Error"));
 
-    fetch("http://localhost:8000/db-check")
+    fetch("/api/db-check")
       .then(res => res.json())
       .then(data => setDbStatus(data.database_connection))
       .catch(() => setDbStatus("Error"));
