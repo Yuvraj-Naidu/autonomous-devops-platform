@@ -134,33 +134,69 @@ Key Characteristics
 
 ---
 
-## Updated Current Architecture (Day 23)
+---
+
+## Stage 6 — Reverse Proxy Layer (NGINX)
+
+NGINX is introduced as the single entry point for all incoming traffic.
+
+### Flow
+```
+User  
+↓  
+NGINX (port 80)  
+↓  
+Frontend (React)  
+↓  
+Backend (FastAPI)  
+↓  
+Database (PostgreSQL)  
+```
+### Key Characteristics
+- Single access point for all requests  
+- Eliminates direct exposure of container ports  
+- Enables traffic routing and control  
+- Supports zero-downtime deployments (traffic switching)  
+- Improves security and production readiness  
+
+---
+
+## Updated Current Architecture (Day 24)
 
 ```
-Browser (http://localhost:3000)
+User (Browser)
 ↓
-React Frontend (Container : 3000)
+http://65.2.155.136
 ↓
-FastAPI Backend (Container : 8000)
+NGINX Reverse Proxy (port 80)
 ↓
-PostgreSQL Database (Container : 5432)
+React Frontend (Container)
+↓
+FastAPI Backend (Container)
+↓
+PostgreSQL Database (Container)
 
 Parallel Deployment Layer
 
 New Version (Validation Phase)
 
-frontend → http://localhost:3001
-backend → http://localhost:8001
+frontend → http://65.2.155.136:3001
+backend → http://65.2.155.136:8001
 ```
 ---
 
 ## System Control
 ```
+Base System Startup
+
 docker compose up --build -d
+
+Deployment (Zero-Downtime Strategy)
+- New version deployed on alternate ports (3001 / 8001)
+- Validation via direct port access
+- Traffic switch handled via NGINX
+- Old containers removed post-switch
 ```
-
-Deployment (Alternate Ports handled manually/scripted)
-
 ---
 
 ## What This Architecture Demonstrates
@@ -174,6 +210,7 @@ Deployment (Alternate Ports handled manually/scripted)
 - Real-time system visibility  
 - Docker networking concepts (internal vs external)  
 - Zero-downtime deployment strategy (port-based validation)  
+- Reverse proxy architecture (NGINX as entry point)
 ```
 ---
 
