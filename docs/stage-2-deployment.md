@@ -67,3 +67,19 @@ To reduce downtime during deployments, a port-switching strategy was introduced.
 - Reduced downtime during deployments
 - Improved deployment reliability
 - Production-like deployment behavior achieved
+
+## Reverse Proxy Setup (NGINX)
+
+Introduced NGINX as a reverse proxy to route traffic through a single entry point (port 80).
+
+### Key Learnings:
+- Resolved port conflict with host-level nginx service
+- Fixed Docker networking issues (containers must share network)
+- Debugged 502 Bad Gateway errors due to upstream misconfiguration
+- Handled NGINX DNS caching by restarting container
+- Optimized workflow using nginx reload instead of rebuild
+
+### Outcome:
+- Centralized traffic routing
+- Foundation for zero-downtime deployment
+- Production-level debugging experience
