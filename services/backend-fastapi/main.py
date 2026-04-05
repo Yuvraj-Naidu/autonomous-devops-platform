@@ -20,6 +20,16 @@ def root():
     return {"message": "Autonomous DevOps Platform API"}
 
 
+@app.get("/api/version")
+def version():
+    return {"version": "v1"}
+
+
+@app.get("/api/version")
+def version():
+    return {"version": "v2"}
+
+
 @app.get("/health")
 def health():
     return {"status": "healthy", "service": "backend-fastapi"}
