@@ -14,9 +14,25 @@ services:
     volumes:
       - ../services/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  backend:
+  frontend_v1:
+    build: ../services/frontend-react
+    container_name: frontend_v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend_v1
+
+  frontend_v2:
+    build: ../services/frontend-react
+    container_name: frontend_v2
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend_v2
+
+  backend_v1:
     build: ../services/backend-fastapi
-    container_name: backend-fastapi
+    container_name: backend_v1
     ports:
       - "8000:8000"
     depends_on:
@@ -27,13 +43,18 @@ services:
       DB_PASSWORD: devops
       DB_NAME: devops_platform
 
-  frontend:
-    build: ../services/frontend-react
-    container_name: frontend-react
+  backend_v2:
+    build: ../services/backend-fastapi
+    container_name: backend_v2
     ports:
-      - "3000:3000"
+      - "8001:8000"
     depends_on:
-      - backend
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_USER: devops
+      DB_PASSWORD: devops
+      DB_NAME: devops_platform
 
   nginx:
     image: nginx:latest
