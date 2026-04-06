@@ -161,7 +161,44 @@ Database (PostgreSQL)
 
 ---
 
-## Updated Current Architecture (Day 24)
+## Stage 7 — Blue-Green Deployment (Zero-Downtime Switching)
+
+The system uses a blue-green deployment model controlled via NGINX.
+
+### Versioning
+```
+- frontend_v1 / backend_v1 → current live version  
+- frontend_v2 / backend_v2 → new version  
+```
+### Flow
+```
+User  
+↓  
+NGINX (port 80)  
+↓  
+Active Version (v1 or v2)  
+↓  
+Backend  
+↓  
+Database  
+```
+### Deployment Logic
+
+1. Deploy v2 containers (alternate version)  
+2. Validate v2 using direct access (ports 3001 / 8001)  
+3. Update NGINX config to route traffic to v2  
+4. Reload NGINX (no downtime)  
+5. Stop and remove v1 containers  
+
+### Key Characteristics
+- Zero downtime deployments  
+- Instant rollback (switch back to v1)  
+- Controlled traffic switching via NGINX  
+- Production-grade release strategy  
+
+---
+
+## Updated Current Architecture (Day 25)
 
 ```
 User (Browser)
@@ -211,6 +248,7 @@ Deployment (Zero-Downtime Strategy)
 - Docker networking concepts (internal vs external)  
 - Zero-downtime deployment strategy (port-based validation)  
 - Reverse proxy architecture (NGINX as entry point)
+- Blue-Green deployment strategy (NGINX-based traffic switching)
 ```
 ---
 
