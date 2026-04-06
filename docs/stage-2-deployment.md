@@ -43,13 +43,15 @@ To reduce downtime during deployments, a port-switching strategy was introduced.
 
 ### Approach:
 - Existing containers run on:
+```
   - Frontend → 3000
   - Backend → 8000
-
+```
 - New containers are deployed on:
+```
   - Frontend → 3001
   - Backend → 8001
-
+```
 ### Deployment Flow:
 1. Deploy new containers on alternate ports
 2. Validate application health (UI/API)
@@ -83,3 +85,23 @@ Introduced NGINX as a reverse proxy to route traffic through a single entry poin
 - Centralized traffic routing
 - Foundation for zero-downtime deployment
 - Production-level debugging experience
+
+## Zero Downtime Deployment (Traffic Switching)
+
+Implemented blue-green style deployment using NGINX upstream switching.
+
+### Approach:
+- Two versions of services run in parallel (v1 & v2)
+- NGINX routes traffic to active version
+- Traffic switched by updating upstream config and reloading NGINX
+
+### Flow:
+1. Deploy new version (v2)
+2. Validate new version
+3. Switch traffic via NGINX
+4. Keep old version (v1) for rollback
+
+### Outcome:
+- Zero downtime achieved
+- Safe deployment strategy
+- Instant rollback capability
