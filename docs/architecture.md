@@ -233,7 +233,18 @@ Active Version (v1 or v2)
 - Safe and controlled production releases  
 ---
 
-## Updated Current Architecture (Day 25)
+## Observability Layer
+
+Basic logging added to monitor system behavior.
+
+### Flow:
+User → NGINX → Services → Logs
+
+### Benefit:
+- Debugging support
+- Visibility into requests and failures
+
+## Updated Current Architecture (Day 28)
 
 ```
 User (Browser)
