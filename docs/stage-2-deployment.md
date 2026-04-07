@@ -122,3 +122,22 @@ Added a validation step before traffic switching using health checks.
 ### Outcome:
 - Prevents faulty deployments
 - Adds safety layer to deployment process
+
+## Rollback Strategy (Failure Recovery)
+
+Implemented rollback capability using NGINX traffic switching.
+
+### Approach:
+- Two versions (v1 stable, v2 new) run in parallel
+- If issues occur after switching, traffic is redirected back to v1
+
+### Flow:
+1. Deploy v2
+2. Validate and switch traffic
+3. Monitor system behavior
+4. If failure → switch back to v1
+
+### Outcome:
+- Instant recovery from failures
+- No downtime during rollback
+- Improved deployment reliability
