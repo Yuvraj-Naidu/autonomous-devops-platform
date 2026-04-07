@@ -195,24 +195,42 @@ Database
 Before switching traffic, the system validates the health of new containers.
 
 ### Flow
-
+```
 Deploy  
 ↓  
 Health Check (/health, /db-check)  
 ↓  
 Traffic Switch  
+```
+### Rollback Mechanism
 
-### Key Characteristics
-- Only healthy containers receive production traffic  
-- Prevents faulty deployments from going live  
-- Reduces risk of downtime during releases  
+The system supports rollback using NGINX upstream switching.
+
+### Flow
+```
+User  
+↓  
+NGINX  
+↓  
+Active Version (v1 or v2)  
+```
+### Rollback
+
+- If v2 fails, traffic is instantly redirected back to v1  
+- No container rebuild required  
+- Achieved via NGINX config switch + reload  
 
 ### Key Characteristics
 - Zero downtime deployments  
 - Instant rollback (switch back to v1)  
 - Controlled traffic switching via NGINX  
 - Production-grade release strategy  
-
+- Only healthy containers receive production traffic  
+- Prevents faulty deployments from going live  
+- Reduces risk of downtime during releases  
+- No downtime during rollback  
+- Fast recovery from failed deployments  
+- Safe and controlled production releases  
 ---
 
 ## Updated Current Architecture (Day 25)
@@ -223,6 +241,8 @@ User (Browser)
 http://65.2.155.136
 ↓
 NGINX Reverse Proxy (port 80)
+↓
+Active Version (v1 or v2 controlled via NGINX)
 ↓
 React Frontend (Container)
 ↓
@@ -246,10 +266,14 @@ Base System Startup
 docker compose up --build -d
 
 Deployment (Zero-Downtime Strategy)
-- New version deployed on alternate ports (3001 / 8001)
-- Validation via direct port access
-- Traffic switch handled via NGINX
-- Old containers removed post-switch
+1. Deploy v2 containers (alternate version)  
+2. Validate v2 using health checks (/health, /db-check) via alternate ports  
+3. Keep v1 running as stable version  
+4. Update NGINX to route traffic to v2  
+5. Reload NGINX (zero downtime switch)  
+6. Monitor system stability  
+7. If failure → rollback to v1 instantly  
+8. If stable → remove v1 containers  
 ```
 ---
 
@@ -266,6 +290,7 @@ Deployment (Zero-Downtime Strategy)
 - Zero-downtime deployment strategy (port-based validation)  
 - Reverse proxy architecture (NGINX as entry point)
 - Blue-Green deployment strategy (NGINX-based traffic switching)
+- Rollback mechanism (instant traffic reversal via NGINX)
 ```
 ---
 
