@@ -185,10 +185,27 @@ Database
 ### Deployment Logic
 
 1. Deploy v2 containers (alternate version)  
-2. Validate v2 using direct access (ports 3001 / 8001)  
+2. Validate v2 using health checks (/health, /db-check) via alternate ports 
 3. Update NGINX config to route traffic to v2  
 4. Reload NGINX (no downtime)  
 5. Stop and remove v1 containers  
+
+### Deployment Safety Layer
+
+Before switching traffic, the system validates the health of new containers.
+
+### Flow
+
+Deploy  
+↓  
+Health Check (/health, /db-check)  
+↓  
+Traffic Switch  
+
+### Key Characteristics
+- Only healthy containers receive production traffic  
+- Prevents faulty deployments from going live  
+- Reduces risk of downtime during releases  
 
 ### Key Characteristics
 - Zero downtime deployments  
