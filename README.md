@@ -15,3 +15,4 @@ Detailed project documentation is available in the docs directory.
 - Implemented blue-green deployment with NGINX for zero downtime traffic switching
 - Added health check validation before switching traffic to ensure safe deployments
 - Added rollback capability using NGINX to instantly recover from failed deployments
+- Added basic logging to monitor container behavior and debug issues
