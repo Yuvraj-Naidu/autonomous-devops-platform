@@ -30,6 +30,11 @@ def version():
     return {"version": "v2"}
 
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+
 @app.get("/health")
 def health():
     return {"status": "healthy", "service": "backend-fastapi"}
