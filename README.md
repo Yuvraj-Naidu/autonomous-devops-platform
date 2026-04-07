@@ -14,3 +14,4 @@ Detailed project documentation is available in the docs directory.
 - Added NGINX reverse proxy for centralized routing and production readiness
 - Implemented blue-green deployment with NGINX for zero downtime traffic switching
 - Added health check validation before switching traffic to ensure safe deployments
+- Added rollback capability using NGINX to instantly recover from failed deployments
