@@ -141,3 +141,20 @@ Implemented rollback capability using NGINX traffic switching.
 - Instant recovery from failures
 - No downtime during rollback
 - Improved deployment reliability
+
+## Logging and Observability
+
+Added basic logging to improve visibility into system behavior.
+
+### Approach:
+- Used Docker logs to monitor containers
+- Added logging in backend service
+
+### Commands:
+- docker logs <container>
+- docker logs -f <container>
+
+### Outcome:
+- Easier debugging
+- Better understanding of request flow
+- Improved system visibility
