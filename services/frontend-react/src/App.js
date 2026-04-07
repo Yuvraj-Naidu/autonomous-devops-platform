@@ -22,6 +22,7 @@ function App() {
       <h1>Version 2 - Deployment Test</h1>
       <h2>Backend Status: {health}</h2>
       <h2>Database Status: {dbStatus}</h2>
+      <h3>Frontend Healthy</h3>
     </div>
   );
 }

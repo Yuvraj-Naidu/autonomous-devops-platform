@@ -29,6 +29,11 @@ services:
       - "3001:3000"
     depends_on:
       - backend_v2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   backend_v1:
     build: ../services/backend-fastapi
@@ -55,6 +60,11 @@ services:
       DB_USER: devops
       DB_PASSWORD: devops
       DB_NAME: devops_platform
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   nginx:
     image: nginx:latest
