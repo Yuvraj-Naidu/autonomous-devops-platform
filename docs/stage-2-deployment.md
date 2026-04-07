@@ -105,3 +105,20 @@ Implemented blue-green style deployment using NGINX upstream switching.
 - Zero downtime achieved
 - Safe deployment strategy
 - Instant rollback capability
+
+## Deployment Validation (Health Checks)
+
+Added a validation step before traffic switching using health checks.
+
+### Approach:
+- Backend exposes `/health` endpoint
+- New version is tested using curl before switching
+
+### Flow:
+1. Deploy new version
+2. Validate health (`/health`)
+3. Only switch traffic if healthy
+
+### Outcome:
+- Prevents faulty deployments
+- Adds safety layer to deployment process
