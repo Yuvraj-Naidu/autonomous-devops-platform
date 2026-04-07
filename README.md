@@ -13,3 +13,4 @@ Detailed project documentation is available in the docs directory.
 - Implemented port-based deployment strategy to reduce downtime during container updates
 - Added NGINX reverse proxy for centralized routing and production readiness
 - Implemented blue-green deployment with NGINX for zero downtime traffic switching
+- Added health check validation before switching traffic to ensure safe deployments
