@@ -158,3 +158,14 @@ Added basic logging to improve visibility into system behavior.
 - Easier debugging
 - Better understanding of request flow
 - Improved system visibility
+
+## Final Deployment Flow
+
+1. Push code to GitHub
+2. CI builds and pushes Docker images
+3. EC2 pulls latest images
+4. Deploy new version (v2)
+5. Validate health
+6. Switch traffic via NGINX
+7. Monitor system
+8. Rollback if needed

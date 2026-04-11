@@ -4,42 +4,19 @@ services:
 
   postgres:
     image: postgres:15
-    container_name: devops-postgres
+    container_name: postgres
+    restart: always
     environment:
       POSTGRES_USER: devops
       POSTGRES_PASSWORD: devops
       POSTGRES_DB: devops_platform
-    ports:
-      - "5432:5432"
     volumes:
       - ../services/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-
-  frontend_v1:
-    build: ../services/frontend-react
-    container_name: frontend_v1
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend_v1
-
-  frontend_v2:
-    build: ../services/frontend-react
-    container_name: frontend_v2
-    ports:
-      - "3001:3000"
-    depends_on:
-      - backend_v2
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
 
   backend_v1:
     build: ../services/backend-fastapi
     container_name: backend_v1
-    ports:
-      - "8000:8000"
+    restart: always
     depends_on:
       - postgres
     environment:
@@ -51,8 +28,7 @@ services:
   backend_v2:
     build: ../services/backend-fastapi
     container_name: backend_v2
-    ports:
-      - "8001:8000"
+    restart: always
     depends_on:
       - postgres
     environment:
@@ -66,10 +42,33 @@ services:
       timeout: 5s
       retries: 3
 
+  frontend_v1:
+    build: ../services/frontend-react
+    container_name: frontend_v1
+    restart: always
+    depends_on:
+      - backend_v1
+
+  frontend_v2:
+    build: ../services/frontend-react
+    container_name: frontend_v2
+    restart: always
+    depends_on:
+      - backend_v2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   nginx:
     image: nginx:latest
     container_name: nginx
+    restart: always
     ports:
       - "80:80"
+    depends_on:
+      - frontend_v1
+      - frontend_v2
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
