@@ -14,7 +14,9 @@ services:
       - ../services/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   backend_v1:
-    build: ../services/backend-fastapi
+    build:
+      context: ../services/backend-fastapi
+    image: backend:v1
     container_name: backend_v1
     restart: always
     depends_on:
@@ -26,7 +28,9 @@ services:
       DB_NAME: devops_platform
 
   backend_v2:
-    build: ../services/backend-fastapi
+    build:
+      context: ../services/backend-fastapi
+    image: backend:v2
     container_name: backend_v2
     restart: always
     depends_on:
@@ -43,14 +47,18 @@ services:
       retries: 3
 
   frontend_v1:
-    build: ../services/frontend-react
+    build:
+      context: ../services/frontend-react
+    image: frontend:v1
     container_name: frontend_v1
     restart: always
     depends_on:
       - backend_v1
 
   frontend_v2:
-    build: ../services/frontend-react
+    build:
+      context: ../services/frontend-react
+    image: frontend:v2
     container_name: frontend_v2
     restart: always
     depends_on:
