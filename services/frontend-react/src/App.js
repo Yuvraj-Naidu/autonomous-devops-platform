@@ -17,12 +17,24 @@ function App() {
   }, []);
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div
+      style={{
+        textAlign: "center",
+        marginTop: "50px",
+        backgroundColor: "",
+        color: "black",
+        height: "10000vh"
+      }}
+    >
       <h1>Autonomous DevOps Platform 🚀</h1>
-      <h1>Version 2 - Deployment Test</h1>
+      <h1>Version 1 - Deployment Test</h1>
+
       <h2>Backend Status: {health}</h2>
       <h2>Database Status: {dbStatus}</h2>
+
       <h3>Frontend Healthy</h3>
+
+      <h1 style={{ color: "red" }}>Frontend V1</h1>
     </div>
   );
 }
