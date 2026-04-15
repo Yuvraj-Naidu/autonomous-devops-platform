@@ -17,10 +17,10 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Backend Image
-        run: docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2 ./services/backend-fastapi
+        run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2 ./services/backend-fastapi
 
       - name: Build Frontend Image
-        run: docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2 ./services/frontend-react
+        run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2 ./services/frontend-react
 
       - name: Push Backend Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2
@@ -43,6 +43,9 @@ jobs:
             set -e
 
             echo "🚀 Pulling V2 images..."
+
+            docker image rm -f ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2 || true
+            docker image rm -f ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2 || true
 
             docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2
             docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2
