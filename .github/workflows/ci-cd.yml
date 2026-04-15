@@ -17,16 +17,17 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Backend Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi ./services/backend-fastapi
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2 ./services/backend-fastapi
 
       - name: Build Frontend Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-react ./services/frontend-react
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2 ./services/frontend-react
 
       - name: Push Backend Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2
 
       - name: Push Frontend Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2
+
 
   deploy:
     needs: build-and-push
@@ -40,50 +41,34 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Pull latest images
-            docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
-            docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react
+            set -e
 
-            docker rm -f backend-new || true
-            docker rm -f frontend-new || true
+            echo "🚀 Pulling V2 images..."
 
-            # ---------------- BACKEND ----------------
-            docker run -d -p 8001:8000 --name backend-new ${{ secrets.DOCKER_USERNAME }}/backend-fastapi
-            sleep 10
+            docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2
+            docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2
 
-            # validate
-            docker ps | grep backend-new
+            echo "🧹 Cleaning old V2..."
 
-            if [ $? -ne 0 ]; then
-              echo "Backend failed"
-              exit 1
-            fi
+            docker rm -f backend_v2 || true
+            docker rm -f frontend_v2 || true
 
-            # DEBUG
-            docker ps
-            docker stop backend-fastapi || true
-            docker rm backend-fastapi || true
+            echo "🟢 Starting Backend V2..."
 
-            docker rename backend-new backend-fastapi
+            docker run -d -p 8001:8000 --name backend_v2 \
+              ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2
 
-            # ---------------- FRONTEND ----------------
-            docker run -d -p 3001:3000 --name frontend-new ${{ secrets.DOCKER_USERNAME }}/frontend-react
-            sleep 10
-            # DEBUG: show running containers
-            docker ps
+            sleep 5
 
-            # ✅ VALIDATE new container
-            docker ps | grep frontend-new
+            docker ps | grep backend_v2 || (echo "❌ Backend V2 failed" && exit 1)
 
-            # If NOT running → EXIT (do NOT kill old)
-            if [ $? -ne 0 ]; then
-              echo "New container failed. Aborting deploy."
-              exit 1
-            fi
+            echo "🟢 Starting Frontend V2..."
 
-            # If success → remove old
-            docker stop frontend-react || true
-            docker rm frontend-react || true
+            docker run -d -p 3001:3000 --name frontend_v2 \
+              ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2
 
-            # Rename new → stable name
-            docker rename frontend-new frontend-react
+            sleep 5
+
+            docker ps | grep frontend_v2 || (echo "❌ Frontend V2 failed" && exit 1)
+
+            echo "✅ V2 deployed successfully (V1 still running)"
