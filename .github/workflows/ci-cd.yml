@@ -16,17 +16,20 @@ jobs:
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
+      # 🔹 BUILD IMAGES (v3)
       - name: Build Backend Image
-        run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2 ./services/backend-fastapi
+        run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3 ./services/backend-fastapi
 
       - name: Build Frontend Image
-        run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2 ./services/frontend-react
+        run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3 ./services/frontend-react
 
+      # 🔹 PUSH IMAGES (v3)
       - name: Push Backend Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3
 
       - name: Push Frontend Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3
+
 
   deploy:
     needs: build-and-push
@@ -42,35 +45,37 @@ jobs:
           script: |
             set -e
 
-            echo "🚀 Pulling V2 images..."
+            echo "🚀 Pulling V3 images..."
 
+            # 🔹 Remove old cached images
             docker image rm -f ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3 || true
             docker image rm -f ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3 || true
 
+            # 🔹 Pull fresh images
             docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3
             docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3
 
-            echo "🧹 Cleaning old V2..."
+            echo "🧹 Cleaning old V3 containers..."
 
-            docker rm -f backend_v2 || true
-            docker rm -f frontend_v2 || true
+            docker rm -f backend_v3 || true
+            docker rm -f frontend_v3 || true
 
-            echo "🟢 Starting Backend V2..."
+            echo "🟢 Starting Backend V3..."
 
-            docker run -d -p 8001:8000 --name backend_v2 \
-              ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2
-
-            sleep 5
-
-            docker ps | grep backend_v2 || (echo "❌ Backend V2 failed" && exit 1)
-
-            echo "🟢 Starting Frontend V2..."
-
-            docker run -d -p 3001:3000 --name frontend_v2 \
-              ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2
+            docker run -d -p 8001:8000 --name backend_v3 \
+              ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3
 
             sleep 5
 
-            docker ps | grep frontend_v2 || (echo "❌ Frontend V2 failed" && exit 1)
+            docker ps | grep backend_v3 || (echo "❌ Backend V3 failed" && exit 1)
 
-            echo "✅ V2 deployed successfully (V1 still running)"
+            echo "🟢 Starting Frontend V3..."
+
+            docker run -d -p 3001:3000 --name frontend_v3 \
+              ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3
+
+            sleep 5
+
+            docker ps | grep frontend_v3 || (echo "❌ Frontend V3 failed" && exit 1)
+
+            echo "✅ V3 deployed successfully (V1 still running)"
