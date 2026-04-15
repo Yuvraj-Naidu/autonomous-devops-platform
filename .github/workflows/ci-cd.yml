@@ -44,11 +44,11 @@ jobs:
 
             echo "🚀 Pulling V2 images..."
 
-            docker image rm -f ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2 || true
-            docker image rm -f ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2 || true
+            docker image rm -f ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3 || true
+            docker image rm -f ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3 || true
 
-            docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2
-            docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2
+            docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3
+            docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3
 
             echo "🧹 Cleaning old V2..."
 
