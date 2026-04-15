@@ -17,17 +17,16 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Backend Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2 ./services/backend-fastapi
+        run: docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2 ./services/backend-fastapi
 
       - name: Build Frontend Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2 ./services/frontend-react
+        run: docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2 ./services/frontend-react
 
       - name: Push Backend Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v2
 
       - name: Push Frontend Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react:v2
-
 
   deploy:
     needs: build-and-push
