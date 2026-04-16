@@ -23,7 +23,7 @@ jobs:
       - name: Build Frontend Image
         run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3 ./services/frontend-react
 
-      # 🔹 PUSH IMAGES (v3)
+      # 🔹 PUSH IMAGES
       - name: Push Backend Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3
 
@@ -46,26 +46,26 @@ jobs:
 
             echo "🚀 Pulling V3 images..."
 
-            # 🔹 Remove old cached images
             docker image rm -f ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3 || true
             docker image rm -f ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3 || true
 
-            # 🔹 Pull fresh images
             docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3
             docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3
 
             echo "🧹 Cleaning old V3 containers..."
-
-
-            docker rm -f backend_v2 || true
-            docker rm -f frontend_v2 || true
 
             docker rm -f backend_v3 || true
             docker rm -f frontend_v3 || true
 
             echo "🟢 Starting Backend V3..."
 
-            docker run -d -p 8001:8000 --name backend_v3 \
+            docker run -d -p 8001:8000 \
+              --name backend_v3 \
+              --network docker_default \
+              -e DB_HOST=postgres \
+              -e DB_USER=devops \
+              -e DB_PASSWORD=devops \
+              -e DB_NAME=devops_platform \
               ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v3
 
             sleep 5
@@ -74,11 +74,30 @@ jobs:
 
             echo "🟢 Starting Frontend V3..."
 
-            docker run -d -p 3001:3000 --name frontend_v3 \
+            docker run -d -p 3001:3000 \
+              --name frontend_v3 \
               ${{ secrets.DOCKER_USERNAME }}/frontend-react:v3
 
             sleep 5
 
             docker ps | grep frontend_v3 || (echo "❌ Frontend V3 failed" && exit 1)
 
-            echo "✅ V3 deployed successfully (V1 still running)"
+            echo "🧪 Running health check..."
+
+            curl -f http://localhost:3001 || (echo "❌ Frontend failed" && exit 1)
+            curl -f http://localhost:8001/health || (echo "❌ Backend failed" && exit 1)
+
+            echo "✅ Health check passed"
+
+            echo "🔁 Switching traffic to V3..."
+
+            docker exec nginx sed -i 's/3000/3001/g' /etc/nginx/nginx.conf
+            docker exec nginx sed -i 's/8000/8001/g' /etc/nginx/nginx.conf
+
+            docker exec nginx nginx -s reload
+
+            echo "🧹 Cleaning unused images..."
+
+            docker image prune -f
+
+            echo "🚀 Deployment completed successfully"

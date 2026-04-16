@@ -21,20 +21,20 @@ function App() {
       style={{
         textAlign: "center",
         marginTop: "0px",
-        backgroundColor: "Red",
+        backgroundColor: "pink",
         color: "black",
         height: "10000vh"
       }}
     >
       <h1>Autonomous DevOps Platform 🚀</h1>
-      <h1>Version 2 - Deployment Test</h1>
+      <h1>Version 4 - Deployment Test</h1>
 
       <h2>Backend Status: {health}</h2>
       <h2>Database Status: {dbStatus}</h2>
 
       <h3>Frontend Healthy</h3>
 
-      <h1 style={{ color: "red" }}>Frontend V2</h1>
+      <h1 style={{ color: "red" }}>Frontend V4 Auto Switch</h1>
     </div>
   );
 }
