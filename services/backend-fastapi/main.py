@@ -1,11 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 import os
-
+import logging
 
 app = FastAPI()
 
+# ✅ CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,48 +15,54 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ✅ Logging
+logging.basicConfig(level=logging.INFO)
 
+
+# 🔹 Root
 @app.get("/")
 def root():
     return {"message": "Autonomous DevOps Platform API"}
 
 
+# 🔹 Version (fixed duplicate)
 @app.get("/api/version")
 def version():
-    return {"version": "v1"}
+    return {"version": "v3"}
 
 
-@app.get("/api/version")
-def version():
-    return {"version": "v2"}
-
-
-import logging
-
-logging.basicConfig(level=logging.INFO)
-
-
-@app.get("/health")
-def health():
-    return {"status": "fail"}
-    # return {"status": "healthy", "service": "backend-fastapi"}
-
-
+# 🔹 DB Connection
 def get_db_connection():
-    conn = psycopg2.connect(
+    return psycopg2.connect(
         host=os.getenv("DB_HOST"),
         database=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
     )
-    return conn
 
 
+# 🔥 HEALTH CHECK (PRODUCTION READY)
+@app.get("/health")
+def health():
+    try:
+        conn = get_db_connection()
+        conn.close()
+        return {"status": "ok", "service": "backend-fastapi"}
+    except Exception as e:
+        logging.error(f"Health check failed: {e}")
+        raise HTTPException(status_code=500, detail="Service unhealthy")
+
+
+# 🔹 DB CHECK (for UI)
 @app.get("/db-check")
 def db_check():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT 1")
-    result = cur.fetchone()
-    conn.close()
-    return {"database_connection": "successful"}
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT 1")
+        cur.fetchone()
+        conn.close()
+        return {"database_connection": "successful"}
+    except Exception as e:
+        logging.error(f"DB check failed: {e}")
+        raise HTTPException(status_code=500, detail="Database connection failed")
