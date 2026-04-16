@@ -21,7 +21,7 @@ function App() {
       style={{
         textAlign: "center",
         marginTop: "0px",
-        backgroundColor: "purple",
+        backgroundColor: "pink",
         color: "black",
         height: "10000vh"
       }}
