@@ -91,8 +91,9 @@ jobs:
 
             echo "🔁 Switching traffic to V3..."
 
-            docker exec nginx sed -i 's/3000/3001/g' /etc/nginx/nginx.conf
-            docker exec nginx sed -i 's/8000/8001/g' /etc/nginx/nginx.conf
+            docker exec nginx sh -c "
+            sed 's/3000/3001/g; s/8000/8001/g' /etc/nginx/nginx.conf > /tmp/nginx.conf &&
+            cp /tmp/nginx.conf /etc/nginx/nginx.conf"
 
             docker exec nginx nginx -s reload
 
