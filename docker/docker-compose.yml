@@ -7,9 +7,9 @@ services:
     container_name: postgres
     restart: always
     environment:
-      POSTGRES_USER: devops
-      POSTGRES_PASSWORD: devops
-      POSTGRES_DB: devops_platform
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - ../services/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
@@ -23,9 +23,9 @@ services:
       - postgres
     environment:
       DB_HOST: postgres
-      DB_USER: devops
-      DB_PASSWORD: devops
-      DB_NAME: devops_platform
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
 
   backend_v2:
     build:
@@ -37,11 +37,11 @@ services:
       - postgres
     environment:
       DB_HOST: postgres
-      DB_USER: devops
-      DB_PASSWORD: devops
-      DB_NAME: devops_platform
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -64,7 +64,7 @@ services:
     depends_on:
       - backend_v2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:80" ]
       interval: 10s
       timeout: 5s
       retries: 3

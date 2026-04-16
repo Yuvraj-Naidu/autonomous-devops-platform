@@ -1,25 +1,25 @@
 # Build stage
-FROM node:18 AS build
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
-# ✅ Install deps first (better caching control)
 COPY package*.json ./
 RUN npm install
 
-# ✅ Then copy source
 COPY . .
-
-# ✅ Build fresh
 RUN npm run build
 
-# Production stage
-FROM node:18
+# Production stage — nginx:alpine (~20MB vs ~900MB node:18)
+FROM nginx:alpine
 
-WORKDIR /app
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
 
-RUN npm install -g serve
+# Copy custom config (serves on port 3000)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=build /app/build ./build
+COPY --from=build /app/build /usr/share/nginx/html
 
-CMD ["serve", "-s", "build", "-l", "3000"]
+EXPOSE 3000
+
+CMD ["nginx", "-g", "daemon off;"]

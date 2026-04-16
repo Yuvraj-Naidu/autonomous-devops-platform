@@ -6,7 +6,7 @@ import logging
 
 app = FastAPI()
 
-# ✅ CORS
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,23 +15,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ Logging
+# Logging
 logging.basicConfig(level=logging.INFO)
 
 
-# 🔹 Root
-@app.get("/")
-def root():
-    return {"message": "Autonomous DevOps Platform API"}
-
-
-# 🔹 Version (fixed duplicate)
-@app.get("/api/version")
-def version():
-    return {"version": "v3"}
-
-
-# 🔹 DB Connection
 def get_db_connection():
     return psycopg2.connect(
         host=os.getenv("DB_HOST"),
@@ -41,28 +28,49 @@ def get_db_connection():
     )
 
 
-# 🔥 HEALTH CHECK (PRODUCTION READY)
+# Root
+@app.get("/")
+def root():
+    return {"message": "Autonomous DevOps Platform API"}
+
+
+# Version
+@app.get("/api/version")
+def version():
+    return {"version": "v4"}
+
+
+# Health Check
 @app.get("/health")
 def health():
+    conn = None
     try:
         conn = get_db_connection()
-        conn.close()
         return {"status": "ok", "service": "backend-fastapi"}
     except Exception as e:
         logging.error(f"Health check failed: {e}")
         raise HTTPException(status_code=500, detail="Service unhealthy")
+    finally:
+        if conn:
+            conn.close()
 
 
-# 🔹 DB CHECK (for UI)
+# DB Check (for UI)
 @app.get("/db-check")
 def db_check():
+    conn = None
+    cur = None
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("SELECT 1")
         cur.fetchone()
-        conn.close()
         return {"database_connection": "successful"}
     except Exception as e:
         logging.error(f"DB check failed: {e}")
         raise HTTPException(status_code=500, detail="Database connection failed")
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
