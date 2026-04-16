@@ -37,7 +37,8 @@ logging.basicConfig(level=logging.INFO)
 
 @app.get("/health")
 def health():
-    return {"status": "healthy", "service": "backend-fastapi"}
+    return {"status": "fail"}
+    # return {"status": "healthy", "service": "backend-fastapi"}
 
 
 def get_db_connection():
