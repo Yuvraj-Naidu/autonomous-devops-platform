@@ -34,7 +34,7 @@ function App() {
 
       <h3>Frontend Healthy</h3>
 
-      <h1 style={{ color: "red" }}>Frontend V4 Auto Switch</h1>
+      <h1 style={{ color: "red" }}>Frontend V4 Auto Switch - Final Fix </h1>
     </div>
   );
 }
