@@ -244,38 +244,94 @@ User → NGINX → Services → Logs
 - Debugging support
 - Visibility into requests and failures
 
+---
+
+## Stage 8 — CD Pipeline (Automated Deployment)
+
+Deployment is fully automated using a Continuous Deployment pipeline integrated with GitHub Actions.
+
+### Flow
+```
+GitHub (code push)  
+↓  
+GitHub Actions (CI)  
+↓  
+Build & Push Docker Images  
+↓  
+Trigger Deployment (EC2)  
+↓  
+Deploy v2 (alternate ports 3001 / 8001)  
+↓  
+Health Check (/health, /db-check)  
+↓  
+NGINX Traffic Switch  
+↓  
+Old Version Cleanup (v1)  
+```
+### Key Characteristics
+- Fully automated deployment pipeline  
+- No manual intervention required  
+- Integrated with existing blue-green strategy  
+- Automated validation before release  
+- Supports rollback via NGINX  
+
+---
+
 ## Updated Current Architecture (Day 28)
 
 ```
-User (Browser)
+User (Browser / Internet)
 ↓
-http://65.2.155.136
+Public IP / Domain (65.2.155.136)
 ↓
 NGINX Reverse Proxy (port 80)
 ↓
-Active Version (v1 or v2 controlled via NGINX)
-↓
-React Frontend (Container)
+Active Version (v1 or v2)
 ↓
 FastAPI Backend (Container)
 ↓
 PostgreSQL Database (Container)
 
+Deployment Control Plane
+
+GitHub
+↓
+GitHub Actions (CI/CD Pipeline)
+↓
+Docker Hub (Image Registry)
+↓
+EC2 (Auto Deployment Target)
+
 Parallel Deployment Layer
 
-New Version (Validation Phase)
+New Version (v2 - Validation Phase)
 
 frontend → http://65.2.155.136:3001
 backend → http://65.2.155.136:8001
 ```
 ---
 
-## System Control
+## ⚙️ System Control
 ```
-Base System Startup
+CI/CD Controlled Deployment (Primary)
 
+1. Code push triggers GitHub Actions pipeline  
+2. Docker images are built and pushed to Docker Hub  
+3. EC2 deployment is triggered automatically  
+4. v2 is deployed on alternate ports (3001 / 8001)  
+5. Health checks executed (/health, /db-check)  
+6. NGINX switches traffic to v2  
+7. System monitored for stability  
+8. If failure → rollback to v1  
+9. If stable → v1 containers removed  
+
+Manual Fallback (If Pipeline Fails)
+
+Base System Startup
+```
 docker compose up --build -d
 
+```
 Deployment (Zero-Downtime Strategy)
 1. Deploy v2 containers (alternate version)  
 2. Validate v2 using health checks (/health, /db-check) via alternate ports  
@@ -286,7 +342,7 @@ Deployment (Zero-Downtime Strategy)
 7. If failure → rollback to v1 instantly  
 8. If stable → remove v1 containers  
 ```
----
+
 
 ## What This Architecture Demonstrates
 ```
@@ -302,6 +358,7 @@ Deployment (Zero-Downtime Strategy)
 - Reverse proxy architecture (NGINX as entry point)
 - Blue-Green deployment strategy (NGINX-based traffic switching)
 - Rollback mechanism (instant traffic reversal via NGINX)
+- Fully automated CD pipeline (end-to-end deployment automation)
 ```
 ---
 
@@ -317,6 +374,8 @@ Docker Hub (Image Registry)
 CD Pipeline (Automated EC2 Deployment)
 ↓
 Reverse Proxy / Load Balancer (Nginx)
+↓
+Terraform (IAC)
 ↓
 Kubernetes (Scaling & Orchestration)
 ↓
