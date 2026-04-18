@@ -16,3 +16,4 @@ Detailed project documentation is available in the docs directory.
 - Added health check validation before switching traffic to ensure safe deployments
 - Added rollback capability using NGINX to instantly recover from failed deployments
 - Added basic logging to monitor container behavior and debug issues
+- Added Terraform setup to provision EC2 infrastructure using Infrastructure as Code
