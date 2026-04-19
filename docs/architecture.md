@@ -277,7 +277,39 @@ Old Version Cleanup (v1)
 
 ---
 
-## Updated Current Architecture (Day 28)
+---
+
+## Stage 9 — Infrastructure as Code (Terraform)
+
+Infrastructure is provisioned using Terraform, enabling fully automated and reproducible environment setup.
+
+### Provisioned Resources
+
+- EC2 Instance (application host)  
+- Security Group (port access control)  
+
+### Flow
+
+Terraform  
+↓  
+AWS EC2 (Provisioned Instance)  
+↓  
+Docker Deployment (Containers)  
+↓  
+NGINX (Reverse Proxy)  
+↓  
+Application (Frontend + Backend + Database)  
+
+### Key Characteristics
+- Fully automated infrastructure provisioning  
+- Reproducible and consistent environments  
+- Eliminates manual cloud setup (no console dependency)  
+- Clear separation between infrastructure and application layers  
+- Enables infrastructure versioning and scalability  
+
+---
+
+## Updated Current Architecture (Day 33)
 
 ```
 User (Browser / Internet)
@@ -300,7 +332,9 @@ GitHub Actions (CI/CD Pipeline)
 ↓
 Docker Hub (Image Registry)
 ↓
-EC2 (Auto Deployment Target)
+Terraform (Infrastructure Provisioning)
+↓
+AWS EC2 (Deployment Target)
 
 Parallel Deployment Layer
 
@@ -359,6 +393,7 @@ Deployment (Zero-Downtime Strategy)
 - Blue-Green deployment strategy (NGINX-based traffic switching)
 - Rollback mechanism (instant traffic reversal via NGINX)
 - Fully automated CD pipeline (end-to-end deployment automation)
+- Infrastructure as Code (Terraform-based provisioning)
 ```
 ---
 
