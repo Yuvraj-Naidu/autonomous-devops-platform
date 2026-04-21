@@ -18,3 +18,4 @@ Detailed project documentation is available in the docs directory.
 - Added basic logging to monitor container behavior and debug issues
 - Added Terraform setup to provision EC2 infrastructure using Infrastructure as Code
 - Automated infrastructure provisioning using Terraform (EC2 + Security Groups)
+- Deployed backend service on Kubernetes with health checks and debugging fixes
