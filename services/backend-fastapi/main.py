@@ -40,19 +40,24 @@ def version():
     return {"version": "v4"}
 
 
-# Health Check
 @app.get("/health")
 def health():
-    conn = None
-    try:
-        conn = get_db_connection()
-        return {"status": "ok", "service": "backend-fastapi"}
-    except Exception as e:
-        logging.error(f"Health check failed: {e}")
-        raise HTTPException(status_code=500, detail="Service unhealthy")
-    finally:
-        if conn:
-            conn.close()
+    return {"status": "ok", "service": "backend-fastapi"}
+
+
+# # Health Check
+# @app.get("/health")
+# def health():
+#     conn = None
+#     try:
+#         conn = get_db_connection()
+#         return {"status": "ok", "service": "backend-fastapi"}
+#     except Exception as e:
+#         logging.error(f"Health check failed: {e}")
+#         raise HTTPException(status_code=500, detail="Service unhealthy")
+#     finally:
+#         if conn:
+#             conn.close()
 
 
 # DB Check (for UI)
