@@ -7,7 +7,8 @@ function App() {
   const [lastChecked, setLastChecked] = useState(null);
 
   useEffect(() => {
-    fetch("/api/health")
+    //fetch("/api/health")
+    fetch("http://127.0.0.1:49320/health")
       .then(res => res.json())
       .then(data => {
         setHealth(data.status);
@@ -15,7 +16,8 @@ function App() {
       })
       .catch(() => setHealth("Error"));
 
-    fetch("/api/db-check")
+    //fetch("/api/db-check")
+    fetch("http://127.0.0.1:49320/db-check")
       .then(res => res.json())
       .then(data => setDbStatus(data.database_connection))
       .catch(() => setDbStatus("Error"));
