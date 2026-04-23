@@ -309,22 +309,70 @@ Application (Frontend + Backend + Database)
 
 ---
 
-## Updated Current Architecture (Day 33)
+
+## Stage 10 — Kubernetes Orchestration Layer
+
+Application is deployed using Kubernetes for container orchestration and service management.
+
+### Components
+
+- Backend → Deployment + Service  
+- Frontend → Deployment + Service  
+
+### Flow (Current Setup - Learning Phase)
+
+Browser  
+↓  
+Frontend Service (NodePort)  
+
+Browser  
+↓  
+Backend Service (NodePort - temporary access)  
+
+### Internal Communication
+
+Frontend  
+↓  
+Backend Service (Kubernetes DNS: backend-service)  
+
+### Key Characteristics
+- Container orchestration using Kubernetes  
+- Service-based communication within cluster  
+- Pod lifecycle management and scaling capability  
+- Separation of frontend and backend services  
+
+### Challenges
+- Browser cannot resolve internal Kubernetes service DNS  
+- Required exposing backend via NodePort for external testing  
+
+### Current Limitations
+- Uses NodePort for external access  
+- Manual access / port exposure required  
+- Not production-ready  
+
+### Next Evolution
+- Introduce Ingress Controller for routing  
+- Replace NodePort with stable external endpoints  
+- Integrate with domain and load balancer  
+
+---
+
+## Updated Current Architecture (Day 35)
 
 ```
 User (Browser / Internet)
 ↓
 Public IP / Domain (65.2.155.136)
 ↓
-NGINX Reverse Proxy (port 80)
+NGINX / NodePort Access (Current Setup)
 ↓
-Active Version (v1 or v2)
+Frontend Service (Kubernetes)
 ↓
-FastAPI Backend (Container)
+Backend Service (Kubernetes)
 ↓
-PostgreSQL Database (Container)
+PostgreSQL Database
 
-Deployment Control Plane
+Control Plane
 
 GitHub
 ↓
@@ -334,38 +382,39 @@ Docker Hub (Image Registry)
 ↓
 Terraform (Infrastructure Provisioning)
 ↓
-AWS EC2 (Deployment Target)
+AWS EC2 (Kubernetes Node)
 
-Parallel Deployment Layer
+Kubernetes Layer
 
-New Version (v2 - Validation Phase)
+Deployments → Pods
+Services → Networking (NodePort)
 
-frontend → http://65.2.155.136:3001
-backend → http://65.2.155.136:8001
+Parallel Deployment (Conceptual)
+
+Blue-Green handled via versioned deployments (v1 / v2)
 ```
 ---
 
 ## ⚙️ System Control
 ```
-CI/CD Controlled Deployment (Primary)
+CI/CD Controlled Deployment (Primary - Kubernetes)
 
 1. Code push triggers GitHub Actions pipeline  
 2. Docker images are built and pushed to Docker Hub  
-3. EC2 deployment is triggered automatically  
-4. v2 is deployed on alternate ports (3001 / 8001)  
-5. Health checks executed (/health, /db-check)  
-6. NGINX switches traffic to v2  
-7. System monitored for stability  
-8. If failure → rollback to v1  
-9. If stable → v1 containers removed  
+3. Infrastructure ensured via Terraform (EC2)  
+4. Kubernetes deployments updated (kubectl apply / rollout)  
+5. New pods (v2) are created  
+6. Health checks handled via Kubernetes readiness/liveness probes  
+7. Traffic routed via Kubernetes Service (NodePort currently)  
+8. If failure → rollout rollback to previous version  
+9. If stable → old pods terminated automatically  
 
-Manual Fallback (If Pipeline Fails)
+Manual Fallback (Docker + NGINX - Legacy Path)
 
 Base System Startup
-```
+
 docker compose up --build -d
 
-```
 Deployment (Zero-Downtime Strategy)
 1. Deploy v2 containers (alternate version)  
 2. Validate v2 using health checks (/health, /db-check) via alternate ports  
@@ -376,6 +425,7 @@ Deployment (Zero-Downtime Strategy)
 7. If failure → rollback to v1 instantly  
 8. If stable → remove v1 containers  
 ```
+---
 
 
 ## What This Architecture Demonstrates
@@ -394,6 +444,7 @@ Deployment (Zero-Downtime Strategy)
 - Rollback mechanism (instant traffic reversal via NGINX)
 - Fully automated CD pipeline (end-to-end deployment automation)
 - Infrastructure as Code (Terraform-based provisioning)
+- Kubernetes orchestration (container scheduling and service management)
 ```
 ---
 
