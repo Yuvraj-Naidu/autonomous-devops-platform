@@ -19,3 +19,4 @@ Detailed project documentation is available in the docs directory.
 - Added Terraform setup to provision EC2 infrastructure using Infrastructure as Code
 - Automated infrastructure provisioning using Terraform (EC2 + Security Groups)
 - Deployed backend service on Kubernetes with health checks and debugging fixes
+- Deployed full system on Kubernetes and handled frontend-backend communication challenges
