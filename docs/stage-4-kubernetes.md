@@ -25,3 +25,23 @@ kubectl rollout restart
 - Backend successfully running on Kubernetes
 - Stable health checks
 - Proper debugging using logs
+
+## Full System Deployment (Frontend + Backend)
+
+Deployed both frontend and backend services on Kubernetes.
+
+### Issue Faced:
+- Frontend could not communicate with backend
+- Kubernetes service DNS not accessible from browser
+
+### Temporary Fix:
+- Exposed backend using minikube service
+- Used external URL in frontend
+
+### Learning:
+- Internal service names work only inside cluster
+- Browser requires external access
+- NodePort/tunnel is not production-ready
+
+### Next Step:
+- Implement Ingress for proper routing
