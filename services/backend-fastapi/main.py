@@ -40,7 +40,7 @@ def version():
     return {"version": "v4"}
 
 
-@app.get("/health")
+@app.get("/api/health")
 def health():
     return {"status": "ok", "service": "backend-fastapi"}
 
@@ -61,7 +61,7 @@ def health():
 
 
 # DB Check (for UI)
-@app.get("/db-check")
+@app.get("/api/db-check")
 def db_check():
     conn = None
     cur = None
