@@ -1,4 +1,4 @@
-name: DevOps Platform CI
+name: Kubernetes CI/CD
 
 on:
   push:
@@ -6,21 +6,24 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{
+          secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Backend Image
-        run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4 ./services/backend-fastapi
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4
+          ./services/backend-fastapi
 
       - name: Build Frontend Image
-        run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4 ./services/frontend-react
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4
+          ./services/frontend-react
 
       - name: Push Backend Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4
@@ -28,73 +31,133 @@ jobs:
       - name: Push Frontend Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4
 
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
+      # 🔑 Setup kubeconfig
+      - name: Set kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
 
-    steps:
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            set -e
+      # 🚀 Deploy (rolling update)
+      - name: Update Backend
+        run: |
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl set image deployment/backend backend=${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4
 
-            echo "🚀 Pulling V4 images..."
+      - name: Update Frontend
+        run: |
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl set image deployment/frontend frontend=${{ secrets.DOCKER_USERNAME }}/frontend-react:v4
 
-            docker image rm -f ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4 || true
-            docker image rm -f ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4 || true
+      # ⏳ Wait for rollout
+      - name: Verify rollout
+        run: |
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl rollout status deployment/backend
+          kubectl rollout status deployment/frontend
 
-            docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4
-            docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4
+      # 🧪 Health check
+      - name: Health Check
+        run: |
+          sleep 10
+          curl -f http://devops.local/api/health
 
-            echo "🧹 Cleaning old containers..."
+# name: DevOps Platform CI
 
-            docker rm -f backend_v2 || true
-            docker rm -f frontend_v2 || true
+# on:
+#   push:
+#     branches:
+#       - main
 
-            echo "🟢 Starting Backend V2 (candidate)..."
+# jobs:
+#   build-and-push:
+#     runs-on: ubuntu-latest
 
-            docker run -d -p 8001:8000 \
-              --name backend_v2 \
-              --network docker_default \
-              -e DB_HOST=postgres \
-              -e DB_USER=${{ secrets.DB_USER }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
-              ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
 
-            sleep 5
+#       - name: Login to Docker Hub
+#         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-            docker ps | grep backend_v2 || (echo "❌ Backend V2 failed" && exit 1)
+#       - name: Build Backend Image
+#         run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4 ./services/backend-fastapi
 
-            echo "🟢 Starting Frontend V2 (candidate)..."
+#       - name: Build Frontend Image
+#         run: docker build --no-cache --pull -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4 ./services/frontend-react
 
-            docker run -d -p 3001:3000 \
-              --name frontend_v2 \
-              ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4
+#       - name: Push Backend Image
+#         run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4
 
-            sleep 5
+#       - name: Push Frontend Image
+#         run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4
 
-            docker ps | grep frontend_v2 || (echo "❌ Frontend V2 failed" && exit 1)
+#   deploy:
+#     needs: build-and-push
+#     runs-on: ubuntu-latest
 
-            echo "🧪 Running health check..."
+#     steps:
+#       - name: Deploy to EC2
+#         uses: appleboy/ssh-action@v1.0.0
+#         with:
+#           host: ${{ secrets.EC2_HOST }}
+#           username: ${{ secrets.EC2_USER }}
+#           key: ${{ secrets.EC2_SSH_KEY }}
+#           script: |
+#             set -e
 
-            curl -f http://localhost:3001 || (echo "❌ Frontend failed" && exit 1)
-            curl -f http://localhost:8001/health || (echo "❌ Backend failed" && exit 1)
+#             echo "🚀 Pulling V4 images..."
 
-            echo "✅ Health check passed"
+#             docker image rm -f ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4 || true
+#             docker image rm -f ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4 || true
 
-            echo "🔁 Switching traffic to V2..."
+#             docker pull ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4
+#             docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4
 
-            docker exec nginx sh -c "sed 's/3000/3001/g; s/8000/8001/g' /etc/nginx/nginx.conf > /tmp/nginx.conf && cp /tmp/nginx.conf /etc/nginx/nginx.conf"
+#             echo "🧹 Cleaning old containers..."
 
-            docker exec nginx nginx -s reload
+#             docker rm -f backend_v2 || true
+#             docker rm -f frontend_v2 || true
 
-            echo "🧹 Cleaning unused images..."
+#             echo "🟢 Starting Backend V2 (candidate)..."
 
-            docker image prune -f
+#             docker run -d -p 8001:8000 \
+#               --name backend_v2 \
+#               --network docker_default \
+#               -e DB_HOST=postgres \
+#               -e DB_USER=${{ secrets.DB_USER }} \
+#               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+#               -e DB_NAME=${{ secrets.DB_NAME }} \
+#               ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v4
 
-            echo "🚀 Deployment completed successfully"
+#             sleep 5
+
+#             docker ps | grep backend_v2 || (echo "❌ Backend V2 failed" && exit 1)
+
+#             echo "🟢 Starting Frontend V2 (candidate)..."
+
+#             docker run -d -p 3001:3000 \
+#               --name frontend_v2 \
+#               ${{ secrets.DOCKER_USERNAME }}/frontend-react:v4
+
+#             sleep 5
+
+#             docker ps | grep frontend_v2 || (echo "❌ Frontend V2 failed" && exit 1)
+
+#             echo "🧪 Running health check..."
+
+#             curl -f http://localhost:3001 || (echo "❌ Frontend failed" && exit 1)
+#             curl -f http://localhost:8001/health || (echo "❌ Backend failed" && exit 1)
+
+#             echo "✅ Health check passed"
+
+#             echo "🔁 Switching traffic to V2..."
+
+#             docker exec nginx sh -c "sed 's/3000/3001/g; s/8000/8001/g' /etc/nginx/nginx.conf > /tmp/nginx.conf && cp /tmp/nginx.conf /etc/nginx/nginx.conf"
+
+#             docker exec nginx nginx -s reload
+
+#             echo "🧹 Cleaning unused images..."
+
+#             docker image prune -f
+
+#             echo "🚀 Deployment completed successfully"

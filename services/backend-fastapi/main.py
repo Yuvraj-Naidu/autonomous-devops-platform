@@ -37,7 +37,7 @@ def root():
 # Version
 @app.get("/api/version")
 def version():
-    return {"version": "v4"}
+    return {"version": "v5"}
 
 
 @app.get("/api/health")
