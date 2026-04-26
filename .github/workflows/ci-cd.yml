@@ -35,6 +35,7 @@ jobs:
       - name: Set kubeconfig
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
+          chmod 600 kubeconfig
           export KUBECONFIG=$PWD/kubeconfig
 
       # 🚀 Deploy (rolling update)
