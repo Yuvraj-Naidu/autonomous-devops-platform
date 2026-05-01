@@ -55,7 +55,7 @@ function App() {
           <div className="top-bar__brand">
             <div className="top-bar__logo">🚀</div>
             <span className="top-bar__title">DevOps Platform</span>
-            <span className="top-bar__badge">v4</span>
+            <span className="top-bar__badge">v5</span>
           </div>
           <div className="top-bar__status">
             <span className="top-bar__dot" />
@@ -137,11 +137,10 @@ function App() {
             <span>Latest Release</span>
           </div>
           <h2 className="version-banner__title">
-            Version 4 — Auto Switch Final Fix
+            Version 5 — Production-Ready DevOps Platform
           </h2>
           <p className="version-banner__desc">
-            Deployment test verified • CI/CD pipeline green • All services
-            healthy
+            CI/CD automated • Zero-downtime deploy • Kubernetes orchestration • Ingress routing • Fully operational
           </p>
         </div>
 
