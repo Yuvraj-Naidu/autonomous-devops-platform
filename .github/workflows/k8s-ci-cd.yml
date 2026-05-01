@@ -1,92 +1,48 @@
 name: Kubernetes CI/CD Pipeline
 
 on:
-    push:
-        branches:
-            - main
+ push:
+  branches:
+  - main
 
 jobs:
-    build-and-deploy:
-        runs-on: ubuntu-latest
+ build-and-deploy:
+  runs-on: ubuntu-latest
 
-        steps:
-            # -----------------------------
-            # Checkout Code
-            # -----------------------------
-            - name: Checkout code
-              uses: actions/checkout@v3
+  steps:
+  # Checkout code
+  - name: Checkout code
+    uses: actions/checkout@v3
 
-            # -----------------------------
-            # Login to Docker Hub
-            # -----------------------------
-            - name: Login to Docker Hub
-              uses: docker/login-action@v2
-              with:
-                  username: ${{ secrets.DOCKER_USERNAME }}
-                  password: ${{ secrets.DOCKER_PASSWORD }}
+  # Login Docker Hub
+  - name: Login to Docker Hub
+    uses: docker/login-action@v2
+    with:
+      username: ${{ secrets.DOCKER_USERNAME }}
+      password: ${{ secrets.DOCKER_PASSWORD }}
 
-            # -----------------------------
-            # Build Backend Image
-            # -----------------------------
-            - name: Build Backend Image
-              run: |
-                  docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v5 ./services/backend-fastapi
+  # Build & Push Backend
+  - name: Build & Push Backend
+    run: |
+      docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v5 ./services/backend-fastapi
+      docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v5
 
-            # -----------------------------
-            # Build Frontend Image
-            # -----------------------------
-            - name: Build Frontend Image
-              run: |
-                  docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v5 ./services/frontend-react
+  # Build & Push Frontend
+  - name: Build & Push Frontend
+    run: |
+      docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-react:v5 ./services/frontend-react
+      docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react:v5
 
-            # -----------------------------
-            # Push Backend Image
-            # -----------------------------
-            - name: Push Backend Image
-              run: |
-                  docker push ${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v5
-
-            # -----------------------------
-            # Push Frontend Image
-            # -----------------------------
-            - name: Push Frontend Image
-              run: |
-                  docker push ${{ secrets.DOCKER_USERNAME }}/frontend-react:v5
-
-            # -----------------------------
-            # Setup Kubeconfig
-            # -----------------------------
-            - name: Set kubeconfig
-              run: |
-                  echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
-                  chmod 600 kubeconfig
-
-            # -----------------------------
-            # Deploy (Rolling Update)
-            # -----------------------------
-            - name: Update Backend
-              run: |
-                  export KUBECONFIG=$PWD/kubeconfig
-                  kubectl set image deployment/backend backend=${{ secrets.DOCKER_USERNAME }}/backend-fastapi:v5
-
-            - name: Update Frontend
-              run: |
-                  export KUBECONFIG=$PWD/kubeconfig
-                  kubectl set image deployment/frontend frontend=${{ secrets.DOCKER_USERNAME }}/frontend-react:v5
-
-            # -----------------------------
-            # Verify Rollout
-            # -----------------------------
-            - name: Verify Rollout
-              run: |
-                  export KUBECONFIG=$PWD/kubeconfig
-                  kubectl rollout status deployment/backend
-                  kubectl rollout status deployment/frontend
-
-            # -----------------------------
-            # Health Check (Optional)
-            # -----------------------------
-            - name: Health Check
-              run: |
-                  sleep 10
-                  curl -f http://devops.local/api/health || exit 1
+  # Deploy to EC2
+  - name: Deploy to EC2
+    uses: appleboy/ssh-action@v0.1.6
+    with:
+      host: ${{ secrets.EC2_HOST }}
+      username: ${{ secrets.EC2_USER }}
+      key: ${{ secrets.EC2_SSH_KEY }}
+      script: |
+        cd ~/test-deploy/autonomous-devops-platform/kubernetes
+        git pull
+        sudo kubectl apply -f .
+        sudo kubectl rollout restart deployment backend
+        sudo kubectl rollout restart deployment frontend
