@@ -416,40 +416,58 @@ Pods
 ---
 ---
 
-## Updated Current Architecture (Day 36)
+## Final System Architecture (Day 38)
+
 ```
 User (Browser / Internet)
 ↓
-Public IP / Domain (65.2.155.136)
+EC2 Public IP
 ↓
-Kubernetes Ingress Controller
+Kubernetes Ingress (NGINX)
 ↓
 Frontend Service
 ↓
+Frontend Pods
+
+Backend Flow
+
+Ingress (Path Routing)
+↓
 Backend Service
 ↓
+Backend Pods
+
+Database Layer
+
+Backend Pods
+↓
 PostgreSQL Database
-
-Control Plane
-
-GitHub
-↓
-GitHub Actions (CI/CD Pipeline)
-↓
-Docker Hub (Image Registry)
-↓
-Terraform (Infrastructure Provisioning)
-↓
-AWS EC2 (K3s Kubernetes Cluster)
-
-Kubernetes Layer
-
-Ingress → Routing
-Services → Internal communication
-Deployments → Pods (v1 / v2)
-
-Blue-Green / Rolling handled via Kubernetes deployments
 ```
+
+---
+```
+CI/CD Flow
+
+GitHub  
+↓  
+GitHub Actions  
+↓  
+Docker Hub  
+↓  
+EC2 (K3s Kubernetes Cluster)  
+↓  
+Kubernetes Deployments (Pods Updated)  
+```
+---
+
+Key Characteristics
+
+- Declarative infrastructure and deployments (Kubernetes)  
+- Centralized traffic routing via Ingress  
+- Fully automated CI/CD pipeline  
+- Cloud-based deployment (EC2 + K3s)  
+- Service-based architecture with scalable pods  
+
 ---
 
 ## ⚙️ System Control
@@ -504,6 +522,7 @@ Deployment (Zero-Downtime Strategy)
 - Kubernetes orchestration (container scheduling and service management)
 - Kubernetes Ingress (centralized traffic routing)
 - Cloud-based Kubernetes deployment (K3s on EC2)
+- End-to-end cloud-native architecture (Kubernetes + CI/CD + Ingress)
 ```
 ---
 
