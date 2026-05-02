@@ -96,3 +96,28 @@ Internet → EC2 → K3s → Service → Pod
 ### Outcome:
 - Successfully deployed full-stack app on cloud-based Kubernetes
 - Publicly accessible services via NodePort
+
+## Production-Style Kubernetes Deployment
+
+Implemented full system deployment with Ingress and CI/CD integration.
+
+### Architecture:
+User → EC2 → Ingress → Services → Pods
+
+### CI/CD:
+GitHub Actions builds and pushes images → EC2 pulls and deploys via kubectl
+
+### Challenges:
+- Ingress not linked to controller (404 errors)
+- Remote cluster access issues (timeout)
+- Image versioning confusion
+
+### Fixes:
+- ingressClassName added
+- SSH-based deployment introduced
+- rollout restart used for same tag updates
+
+### Outcome:
+- Fully automated deployment pipeline
+- Clean routing using Ingress
+- Production-style architecture
