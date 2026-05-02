@@ -21,3 +21,4 @@ Detailed project documentation is available in the docs directory.
 - Deployed backend service on Kubernetes with health checks and debugging fixes
 - Deployed full system on Kubernetes and handled frontend-backend communication challenges
 - Introduced Kubernetes Ingress for production-style routing
+- Deployed Kubernetes (K3s) cluster on AWS EC2 with public access using NodePort
