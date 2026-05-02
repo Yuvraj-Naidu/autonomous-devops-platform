@@ -69,3 +69,30 @@ User → Ingress → Service → Pod
 - Centralized routing
 - Cleaner architecture
 - Foundation for production deployment
+
+## K3s Deployment on AWS EC2
+
+Migrated Kubernetes setup from Minikube (local) to K3s on AWS EC2.
+
+### Motivation:
+- Need for public access
+- Simulate real production environment
+
+### Architecture:
+Internet → EC2 → K3s → Service → Pod
+
+### Challenges:
+- SSH connectivity issues due to dynamic IP
+- Low-resource instance limitations
+- Kubeconfig permission issues
+- Frontend-backend communication mismatch
+
+### Fixes:
+- Adjusted Security Groups
+- Upgraded instance type
+- Configured swap memory
+- Updated frontend API base URL
+
+### Outcome:
+- Successfully deployed full-stack app on cloud-based Kubernetes
+- Publicly accessible services via NodePort
