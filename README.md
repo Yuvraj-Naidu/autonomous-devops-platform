@@ -20,3 +20,4 @@ Detailed project documentation is available in the docs directory.
 - Automated infrastructure provisioning using Terraform (EC2 + Security Groups)
 - Deployed backend service on Kubernetes with health checks and debugging fixes
 - Deployed full system on Kubernetes and handled frontend-backend communication challenges
+- Introduced Kubernetes Ingress for production-style routing
