@@ -321,13 +321,17 @@ Application is deployed using Kubernetes for container orchestration and service
 
 ### Flow (Current Setup - Learning Phase)
 
-Browser  
-↓  
-Frontend Service (NodePort)  
+### Flow (Current Setup)
 
-Browser  
+User  
 ↓  
-Backend Service (NodePort - temporary access)  
+Ingress (Kubernetes)  
+↓  
+Frontend Service  
+↓  
+Backend Service  
+↓  
+Pod  
 
 ### Internal Communication
 
@@ -346,29 +350,56 @@ Backend Service (Kubernetes DNS: backend-service)
 - Required exposing backend via NodePort for external testing  
 
 ### Current Limitations
-- Uses NodePort for external access  
-- Manual access / port exposure required  
-- Not production-ready  
+- Ingress configured (initial setup)  
+- Domain/SSL not yet configured  
+- Requires further production hardening    
 
 ### Next Evolution
-- Introduce Ingress Controller for routing  
-- Replace NodePort with stable external endpoints  
-- Integrate with domain and load balancer  
+- Add domain + DNS mapping  
+- Enable HTTPS (SSL via Ingress)  
+- Integrate with cloud load balancer    
+
+### Traffic Routing Evolution
+
+Stage 1 (Initial Setup)  
+User  
+↓  
+NodePort  
+↓  
+Service  
+↓  
+Pod  
+
+Stage 2 (Current Setup)  
+User  
+↓  
+Ingress  
+↓  
+Service  
+↓  
+Pod  
+
+### Key Characteristics
+- Ingress provides centralized routing  
+- Eliminates direct NodePort exposure  
+- Enables production-grade access patterns  
+- Supports domain-based and path-based routing  
 
 ---
 
-## Updated Current Architecture (Day 35)
+---
 
+## Updated Current Architecture (Day 36)
 ```
 User (Browser / Internet)
 ↓
 Public IP / Domain (65.2.155.136)
 ↓
-NGINX / NodePort Access (Current Setup)
+Kubernetes Ingress Controller
 ↓
-Frontend Service (Kubernetes)
+Frontend Service
 ↓
-Backend Service (Kubernetes)
+Backend Service
 ↓
 PostgreSQL Database
 
@@ -386,12 +417,11 @@ AWS EC2 (Kubernetes Node)
 
 Kubernetes Layer
 
-Deployments → Pods
-Services → Networking (NodePort)
+Ingress → Routing
+Services → Internal communication
+Deployments → Pods (v1 / v2)
 
-Parallel Deployment (Conceptual)
-
-Blue-Green handled via versioned deployments (v1 / v2)
+Blue-Green / Rolling handled via Kubernetes deployments
 ```
 ---
 
@@ -445,6 +475,7 @@ Deployment (Zero-Downtime Strategy)
 - Fully automated CD pipeline (end-to-end deployment automation)
 - Infrastructure as Code (Terraform-based provisioning)
 - Kubernetes orchestration (container scheduling and service management)
+- Kubernetes Ingress (centralized traffic routing)
 ```
 ---
 
