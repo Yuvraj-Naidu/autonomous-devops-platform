@@ -386,7 +386,34 @@ Pod
 - Supports domain-based and path-based routing  
 
 ---
+### Deployment Evolution (Local → Cloud)
 
+Local (Development Setup)  
+Minikube  
+↓  
+NodePort  
+↓  
+Browser  
+
+Cloud (Current Setup)  
+Internet  
+↓  
+AWS EC2 (K3s Cluster)  
+↓  
+NodePort / Ingress  
+↓  
+Kubernetes Services  
+↓  
+Pods  
+
+### Key Characteristics
+- Transition from local cluster (Minikube) to cloud-based cluster (K3s on EC2)  
+- Real-world networking introduced (public IP, external access)  
+- Security considerations (ports, access control via security groups)  
+- Resource constraints and optimization in cloud environment  
+- Closer to production-grade deployment setup  
+
+---
 ---
 
 ## Updated Current Architecture (Day 36)
@@ -413,7 +440,7 @@ Docker Hub (Image Registry)
 ↓
 Terraform (Infrastructure Provisioning)
 ↓
-AWS EC2 (Kubernetes Node)
+AWS EC2 (K3s Kubernetes Cluster)
 
 Kubernetes Layer
 
@@ -476,6 +503,7 @@ Deployment (Zero-Downtime Strategy)
 - Infrastructure as Code (Terraform-based provisioning)
 - Kubernetes orchestration (container scheduling and service management)
 - Kubernetes Ingress (centralized traffic routing)
+- Cloud-based Kubernetes deployment (K3s on EC2)
 ```
 ---
 
