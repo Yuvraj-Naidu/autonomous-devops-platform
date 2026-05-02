@@ -45,3 +45,27 @@ Deployed both frontend and backend services on Kubernetes.
 
 ### Next Step:
 - Implement Ingress for proper routing
+
+## Ingress Introduction
+
+Moved from NodePort-based exposure to Ingress-based routing.
+
+### Motivation:
+NodePort is not suitable for production due to lack of routing control and scalability.
+
+### Architecture Change:
+Before:
+User → NodePort → Service → Pod
+
+After:
+User → Ingress → Service → Pod
+
+### Challenges:
+- Networking issues in Minikube
+- Ingress misconfiguration
+- Service accessibility problems
+
+### Outcome:
+- Centralized routing
+- Cleaner architecture
+- Foundation for production deployment
