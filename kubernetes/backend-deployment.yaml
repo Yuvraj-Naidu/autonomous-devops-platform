@@ -4,7 +4,7 @@ metadata:
   name: backend
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: backend
@@ -31,3 +31,19 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
+
+          # Liveness Probe (restart if broken)
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          # Readiness Probe (serve traffic only when ready)
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
