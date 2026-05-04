@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: yuvrajnaidu/frontend-react:v5
+          image: yuvrajnaidu/frontend-react:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
