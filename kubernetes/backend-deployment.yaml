@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: yuvrajnaidu/backend-fastapi:latest
+          image: yuvrajnaidu/backend-fastapi:v1
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
