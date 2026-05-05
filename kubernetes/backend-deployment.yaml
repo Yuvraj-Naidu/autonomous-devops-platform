@@ -22,6 +22,10 @@ spec:
         - name: backend
           image: yuvrajnaidu/backend-fastapi:v13
           imagePullPolicy: Always
+
+          env:
+            - name: APP_VERSION
+              value: "v13"   # placeholder, will be overridden by CI/CD pipeline
           ports:
             - containerPort: 8000
           resources:

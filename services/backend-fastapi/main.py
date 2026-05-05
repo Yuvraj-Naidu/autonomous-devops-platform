@@ -33,11 +33,13 @@ def get_db_connection():
 def root():
     return {"message": "Autonomous DevOps Platform API V14"}
 
-
-# Version
+#version
 @app.get("/api/version")
 def version():
-    return {"version": "v14", "description": "Production-Ready DevOps Platform"}
+    return {
+        "version": os.getenv("APP_VERSION", "unknown"),
+        "description": "Production-Ready DevOps Platform"
+    }
 
 
 @app.get("/api/health")

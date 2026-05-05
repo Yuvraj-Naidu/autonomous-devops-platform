@@ -49,5 +49,7 @@ jobs:
             sudo kubectl set image deployment/backend backend=${{ secrets.DOCKER_USERNAME }}/backend-fastapi:${{ env.TAG }}
             sudo kubectl set image deployment/frontend frontend=${{ secrets.DOCKER_USERNAME }}/frontend-react:${{ env.TAG }}
 
+            sudo kubectl set env deployment/backend APP_VERSION=${{ env.TAG }}
+
             sudo kubectl rollout status deployment/backend
             sudo kubectl rollout status deployment/frontend

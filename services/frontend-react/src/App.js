@@ -5,6 +5,7 @@ function App() {
   const [health, setHealth] = useState("Loading...");
   const [dbStatus, setDbStatus] = useState("Loading...");
   const [lastChecked, setLastChecked] = useState(null);
+  const [version, setVersion] = useState("");
 
   useEffect(() => {
     fetch("/api/health")
@@ -21,6 +22,10 @@ function App() {
       .then(res => res.json())
       .then(data => setDbStatus(data.database_connection))
       .catch(() => setDbStatus("Error"));
+
+    fetch("/api/version")
+      .then(res => res.json())
+      .then(data => setVersion(data.version));
   }, []);
 
   const getStatusClass = (status) => {
@@ -55,7 +60,7 @@ function App() {
           <div className="top-bar__brand">
             <div className="top-bar__logo">🚀</div>
             <span className="top-bar__title">DevOps Platform</span>
-            <span className="top-bar__badge">v14</span>
+            <span className="top-bar__badge">{version}</span>
           </div>
           <div className="top-bar__status">
             <span className="top-bar__dot" />
@@ -137,7 +142,7 @@ function App() {
             <span>Latest Release</span>
           </div>
           <h2 className="version-banner__title">
-            Version v14 — Production-Ready DevOps Platform
+            Version {version} — Production-Ready DevOps Platform
           </h2>
           <p className="version-banner__desc">
             CI/CD automated • Zero-downtime deploy • Kubernetes orchestration • Ingress routing • Fully operational
