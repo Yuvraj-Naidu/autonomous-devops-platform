@@ -31,7 +31,7 @@ def get_db_connection():
 # Root
 @app.get("/")
 def root():
-    return {"message": "Autonomous DevOps Platform API V11"}
+    return {"message": "Autonomous DevOps Platform API V13"}
 
 
 # Version
