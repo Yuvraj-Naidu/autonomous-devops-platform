@@ -55,7 +55,7 @@ function App() {
           <div className="top-bar__brand">
             <div className="top-bar__logo">🚀</div>
             <span className="top-bar__title">DevOps Platform</span>
-            <span className="top-bar__badge">v13</span>
+            <span className="top-bar__badge">v14</span>
           </div>
           <div className="top-bar__status">
             <span className="top-bar__dot" />
@@ -137,7 +137,7 @@ function App() {
             <span>Latest Release</span>
           </div>
           <h2 className="version-banner__title">
-            Version v13 — Production-Ready DevOps Platform
+            Version v14 — Production-Ready DevOps Platform
           </h2>
           <p className="version-banner__desc">
             CI/CD automated • Zero-downtime deploy • Kubernetes orchestration • Ingress routing • Fully operational

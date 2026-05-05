@@ -31,13 +31,13 @@ def get_db_connection():
 # Root
 @app.get("/")
 def root():
-    return {"message": "Autonomous DevOps Platform API V13"}
+    return {"message": "Autonomous DevOps Platform API V14"}
 
 
 # Version
 @app.get("/api/version")
 def version():
-    return {"version": "v5"}
+    return {"version": "v14", "description": "Production-Ready DevOps Platform"}
 
 
 @app.get("/api/health")
