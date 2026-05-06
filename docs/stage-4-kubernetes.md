@@ -121,3 +121,26 @@ GitHub Actions builds and pushes images → EC2 pulls and deploys via kubectl
 - Fully automated deployment pipeline
 - Clean routing using Ingress
 - Production-style architecture
+
+## Reliability & Scaling
+
+Enhanced Kubernetes deployment with production-grade reliability features.
+
+### Implementations:
+- Liveness and readiness probes
+- Replica scaling (multi-pod setup)
+- Rolling updates with zero downtime
+
+### Testing:
+- Readiness failure simulation (traffic removal)
+- Pod deletion (self-healing validation)
+
+### Deployment Improvements:
+- Immutable image versioning
+- CI/CD-driven deployment
+- Rollback validation per service
+
+### Outcome:
+- Self-healing system
+- Traffic-safe routing
+- High availability architecture
