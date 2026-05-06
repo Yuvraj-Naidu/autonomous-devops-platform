@@ -414,6 +414,28 @@ Pods
 - Closer to production-grade deployment setup  
 
 ---
+
+### Reliability Layer (Kubernetes)
+
+System reliability is ensured using Kubernetes-native health checks and scaling mechanisms.
+
+### Components
+
+- Liveness Probes → detects and restarts unhealthy containers  
+- Readiness Probes → ensures only healthy pods receive traffic  
+- Replicas → maintains multiple pod instances for high availability  
+
+### Key Characteristics
+- Self-healing system (automatic pod recovery)  
+- Controlled traffic routing based on pod health  
+- High availability through multiple replicas  
+- Fault tolerance at container and service level  
+
+### Result
+System is self-healing, scalable, and production-ready  
+
+---
+
 ---
 
 ## Final System Architecture (Day 38)
@@ -523,6 +545,7 @@ Deployment (Zero-Downtime Strategy)
 - Kubernetes Ingress (centralized traffic routing)
 - Cloud-based Kubernetes deployment (K3s on EC2)
 - End-to-end cloud-native architecture (Kubernetes + CI/CD + Ingress)
+- Kubernetes reliability (liveness/readiness probes + replica-based scaling)
 ```
 ---
 
