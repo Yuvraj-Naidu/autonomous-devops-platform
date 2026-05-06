@@ -435,7 +435,41 @@ System reliability is ensured using Kubernetes-native health checks and scaling 
 System is self-healing, scalable, and production-ready  
 
 ---
+---
 
+## Stage 11 — Observability Layer (Metrics Monitoring)
+
+System observability is introduced using Prometheus for metrics collection and monitoring.
+
+### Components
+
+- Prometheus → metrics collection and storage  
+- Query UI → visualization and querying of metrics  
+
+### Flow
+
+Application (Pods)  
+↓  
+Prometheus (Scrapes Metrics)  
+↓  
+Query UI (Metrics Visualization)  
+
+### Key Characteristics
+- Real-time system health visibility  
+- Metrics-based monitoring (CPU, memory, pod status)  
+- Enables debugging and performance analysis  
+- Foundation for alerting and scaling decisions  
+
+### Current Scope
+- Metrics collection enabled via Prometheus  
+- Basic monitoring setup (manual access)  
+
+### Next Evolution
+- Integrate Grafana for dashboards  
+- Add alerting (threshold-based notifications)  
+- Enable automated scaling using metrics (HPA)  
+
+---
 ---
 
 ## Final System Architecture (Day 38)
@@ -479,6 +513,12 @@ Docker Hub
 EC2 (K3s Kubernetes Cluster)  
 ↓  
 Kubernetes Deployments (Pods Updated)  
+↓
+Observability Layer
+
+Prometheus (Kubernetes)
+↓
+Metrics from Pods / Services
 ```
 ---
 
@@ -546,6 +586,7 @@ Deployment (Zero-Downtime Strategy)
 - Cloud-based Kubernetes deployment (K3s on EC2)
 - End-to-end cloud-native architecture (Kubernetes + CI/CD + Ingress)
 - Kubernetes reliability (liveness/readiness probes + replica-based scaling)
+- Observability (metrics monitoring using Prometheus)
 ```
 ---
 
