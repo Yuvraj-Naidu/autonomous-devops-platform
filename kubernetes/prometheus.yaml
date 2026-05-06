@@ -3,9 +3,15 @@ kind: Pod
 metadata:
   name: prometheus-lite
 spec:
-  restartPolicy: Always
   containers:
     - name: prometheus
       image: prom/prometheus
       ports:
         - containerPort: 9090
+      volumeMounts:
+        - name: config
+          mountPath: /etc/prometheus
+  volumes:
+    - name: config
+      configMap:
+        name: prometheus-config
