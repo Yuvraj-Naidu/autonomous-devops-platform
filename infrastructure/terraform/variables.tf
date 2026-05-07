@@ -15,3 +15,7 @@ variable "project_name" {
 variable "environment" {
   default = "dev"
 }
+
+variable "server_name" {
+  default = "autonomous-devops-ec2"
+}

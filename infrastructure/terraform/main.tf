@@ -11,7 +11,7 @@ resource "aws_instance" "devops_server" {
   vpc_security_group_ids = [aws_security_group.devops_sg.id]
 
   tags = {
-    Name        = "autonomous-devops-ec2"
+    Name        = var.server_name # server name
     Project     = var.project_name # project name 
     Environment = var.environment
   }
