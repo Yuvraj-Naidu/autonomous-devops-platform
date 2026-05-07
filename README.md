@@ -25,3 +25,4 @@ Detailed project documentation is available in the docs directory.
 - Integrated CI/CD with Kubernetes (K3s) and implemented Ingress-based routing
 - Added self-healing and scaling using Kubernetes probes and multi-replica deployments
 - Added lightweight monitoring using Prometheus for Kubernetes observability
+- Integrated Terraform-based infrastructure provisioning with Kubernetes CI/CD deployment flow
