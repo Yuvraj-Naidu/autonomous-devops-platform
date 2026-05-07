@@ -435,6 +435,20 @@ System reliability is ensured using Kubernetes-native health checks and scaling 
 System is self-healing, scalable, and production-ready  
 
 ---
+### Infrastructure Layer
+
+Terraform provisions:
+- EC2 instances  
+- Security Groups  
+
+CI/CD handles:
+- Container deployments  
+- Kubernetes workload updates  
+
+### Key Principle
+Infrastructure provisioning and application deployment are separated but connected workflows.  
+
+---
 ---
 
 ## Stage 11 — Observability Layer (Metrics Monitoring)
