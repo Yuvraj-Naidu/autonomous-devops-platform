@@ -22,4 +22,4 @@ def root():
 
 
 # AI routes
-app.include_router(ai_router, prefix="/api")  # version v29
+app.include_router(ai_router)  # version v29
