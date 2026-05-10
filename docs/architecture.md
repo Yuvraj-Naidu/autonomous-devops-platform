@@ -484,6 +484,48 @@ Query UI (Metrics Visualization)
 - Enable automated scaling using metrics (HPA)  
 
 ---
+
+---
+
+## Stage 12 — AI Operations Layer
+
+An AI-assisted troubleshooting layer is integrated into the platform for Kubernetes diagnostics and operational analysis.
+
+### Components
+
+- KubeMedic → Kubernetes troubleshooting intelligence  
+- AI Service → log analysis orchestration  
+- LLM → root cause analysis and diagnosis  
+
+### Flow
+
+Kubernetes  
+↓  
+Pod Logs  
+↓  
+AI Service  
+↓  
+LLM Analysis  
+↓  
+Diagnosis / Suggested Fixes  
+
+### Key Characteristics
+- Automated Kubernetes troubleshooting  
+- AI-assisted root cause analysis  
+- Log-driven operational insights  
+- Extends observability into intelligent operations  
+
+### Current Scope
+- Pod log collection and analysis  
+- AI-generated diagnosis and recommendations  
+
+### Next Evolution
+- Automated remediation workflows  
+- Self-healing actions based on AI diagnosis  
+- Incident prediction and anomaly detection  
+
+---
+
 ---
 
 ## Final System Architecture (Day 38)
@@ -533,6 +575,19 @@ Observability Layer
 Prometheus (Kubernetes)
 ↓
 Metrics from Pods / Services
+```
+
+AI Operations Layer
+```
+Kubernetes Cluster
+↓
+Logs / Events
+↓
+KubeMedic (AI Service)
+↓
+LLM Diagnosis Engine
+↓
+Root Cause Analysis / Suggested Fixes
 ```
 ---
 
@@ -601,6 +656,7 @@ Deployment (Zero-Downtime Strategy)
 - End-to-end cloud-native architecture (Kubernetes + CI/CD + Ingress)
 - Kubernetes reliability (liveness/readiness probes + replica-based scaling)
 - Observability (metrics monitoring using Prometheus)
+- AI-assisted operations and Kubernetes troubleshooting
 ```
 ---
 
