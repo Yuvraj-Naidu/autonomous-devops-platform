@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import KubeMedic from "./components/KubeMedic";
 
 function App() {
   const [health, setHealth] = useState("Loading...");
@@ -148,6 +149,32 @@ function App() {
             CI/CD automated • Zero-downtime deploy • Kubernetes orchestration • Ingress routing • Fully operational
           </p>
         </div>
+
+        {/* AI Operations Section */}
+        <section style={{ marginTop: "60px" }}>
+
+          <div className="version-banner">
+
+            <div className="version-banner__tag">
+              <span>🤖</span>
+              <span>AI Operations</span>
+            </div>
+
+            <h2 className="version-banner__title">
+              KubeMedic — AI Kubernetes Troubleshooter
+            </h2>
+
+            <p className="version-banner__desc">
+              Analyze Kubernetes pod failures using AI-assisted root cause analysis.
+            </p>
+
+          </div>
+
+          <div style={{ marginTop: "30px" }}>
+            <KubeMedic />
+          </div>
+
+        </section>
 
         {/* Footer */}
         <footer className="app-footer">
