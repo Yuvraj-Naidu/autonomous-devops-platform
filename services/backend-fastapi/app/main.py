@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 from app.routes.ai import router as ai_router
 
@@ -21,5 +22,20 @@ def root():
     return {"message": "KubeMedic API Running"}
 
 
-# AI routes
-app.include_router(ai_router)  # version v29
+# Health check — must match K8s liveness/readiness probe path
+@app.get("/api/health")
+def health():
+    return {"status": "ok", "service": "backend-fastapi"}
+
+
+# Version endpoint
+@app.get("/api/version")
+def version():
+    return {
+        "version": os.getenv("APP_VERSION", "unknown"),
+        "description": "Production-Ready DevOps Platform",
+    }
+
+
+# AI routes — prefix ensures routes are served under /api/*
+app.include_router(ai_router, prefix="/api")
