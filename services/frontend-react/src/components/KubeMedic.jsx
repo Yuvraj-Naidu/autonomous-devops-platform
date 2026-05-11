@@ -29,7 +29,7 @@ export default function KubeMedic() {
         try {
 
             const response = await fetch(
-                `http://127.0.0.1:8000/pods?namespace=${namespace}`
+                `/api/pods?namespace=${namespace}`
             );
 
             const data = await response.json();
@@ -52,7 +52,7 @@ export default function KubeMedic() {
             setLoading(true);
 
             const response = await fetch(
-                `http://127.0.0.1:8000/ai/kubemedic/pod-analysis?namespace=${namespace}&pod_name=${selectedPod}`
+                `/api/ai/kubemedic/pod-analysis?namespace=${namespace}&pod_name=${selectedPod}`
             );
 
             const data = await response.json();

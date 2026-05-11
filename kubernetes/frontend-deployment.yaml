@@ -31,3 +31,19 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
+
+          # Liveness Probe (restart if broken)
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          # Readiness Probe (serve traffic only when ready)
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 5
