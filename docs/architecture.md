@@ -525,7 +525,35 @@ Diagnosis / Suggested Fixes
 - Incident prediction and anomaly detection  
 
 ---
+### AI Layer (DeploySense)
 
+DeploySense analyzes CI/CD pipeline logs using LLM-based diagnostics.
+
+### Flow
+
+CI/CD Logs  
+↓  
+FastAPI Service  
+↓  
+AI Model (LLM)  
+↓  
+Structured Analysis Output  
+↓  
+UI Dashboard  
+
+### Covers
+- Build failures  
+- Docker-related issues  
+- Kubernetes deployment errors  
+- Configuration and pipeline problems  
+
+### Key Characteristics
+- Reduces manual log analysis  
+- Faster debugging and issue identification  
+- Provides structured and actionable insights  
+- Extends AI assistance into CI/CD operations  
+
+---
 ---
 
 ## Final System Architecture (Day 38)
