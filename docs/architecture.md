@@ -709,3 +709,26 @@ Kubernetes (Scaling & Orchestration)
 AI DevOps Layer (Self-healing + Intelligent Deployments)
 ```
 
+```
+Kubernetes
+↓
+Logs / Events
+↓
+KubeMedic
+↓
+LLM Diagnosis
+↓
+Suggested Fixes
+```
+
+```
+CI/CD Pipeline
+↓
+Logs
+↓
+DeploySense
+↓
+LLM Analysis
+↓
+Structured Debug Output
+```
