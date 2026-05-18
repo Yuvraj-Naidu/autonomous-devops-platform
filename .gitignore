@@ -5,6 +5,7 @@ node_modules/
 __pycache__/
 *.pyc
 *.pyo
+.venv/
 
 # Environment
 .env
@@ -36,3 +37,7 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# Node
+node_modules/
+build/

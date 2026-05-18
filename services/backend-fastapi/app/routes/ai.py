@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from app.ai.kubemedic import analyze_k8s_logs
 from app.kubernetes.pod_logs import get_pod_logs
 from app.kubernetes.pods import list_pods
+from app.ai.deploysense import analyze_deploy_logs
 
 router = APIRouter()
 
@@ -44,3 +45,11 @@ def get_pods(namespace: str = "default"):
     pods = list_pods(namespace)
 
     return {"pods": pods}
+
+
+@router.post("/ai/deploysense")
+def deploysense(request: LogRequest):
+
+    result = analyze_deploy_logs(request.logs)
+
+    return result

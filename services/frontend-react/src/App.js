@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import KubeMedic from "./components/KubeMedic";
+import DeploySense from "./components/DeploySense";
 
 function App() {
   const [health, setHealth] = useState("Loading...");
@@ -175,6 +176,28 @@ function App() {
           </div>
 
         </section>
+        <section style={{ marginTop: "60px" }}>
+
+          <div className="version-banner">
+            <div className="version-banner__tag">
+              <span>⚙️</span>
+              <span>DeploySense</span>
+            </div>
+
+            <h2 className="version-banner__title">
+              DeploySense — AI-Powered CI/CD Failure Analysis
+            </h2>
+
+            <p className="version-banner__desc">
+              Paste your CI/CD logs and get instant AI-powered root cause analysis, suggested fixes, and prevention strategies.
+            </p>
+          </div>
+
+          <div style={{ marginTop: "30px" }}>
+            <DeploySense />
+          </div>
+
+        </section>
 
         {/* Footer */}
         <footer className="app-footer">
@@ -190,4 +213,3 @@ function App() {
 }
 
 export default App;
-// v33 fix
