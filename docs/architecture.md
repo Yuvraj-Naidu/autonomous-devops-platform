@@ -685,6 +685,7 @@ Deployment (Zero-Downtime Strategy)
 - Kubernetes reliability (liveness/readiness probes + replica-based scaling)
 - Observability (metrics monitoring using Prometheus)
 - AI-assisted operations and Kubernetes troubleshooting
+- AI-driven CI/CD troubleshooting and diagnostics
 ```
 ---
 
