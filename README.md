@@ -27,3 +27,4 @@ Detailed project documentation is available in the docs directory.
 - Added lightweight monitoring using Prometheus for Kubernetes observability
 - Integrated Terraform-based infrastructure provisioning with Kubernetes CI/CD deployment flow
 - Added KubeMedic: AI-powered Kubernetes troubleshooting module using LLM-based log analysis
+- Added DeploySense: AI-powered CI/CD failure analyzer using LLM-based log analysis
