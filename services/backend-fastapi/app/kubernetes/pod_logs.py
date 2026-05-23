@@ -5,8 +5,11 @@ def get_pod_logs(namespace: str, pod_name: str):
 
     try:
 
-        # Load kubeconfig
-        config.load_kube_config()
+        # Load kubeconfig — in-cluster first, local fallback
+        try:
+            config.load_incluster_config()
+        except:
+            config.load_kube_config()
 
         v1 = client.CoreV1Api()
 

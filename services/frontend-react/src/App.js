@@ -151,53 +151,12 @@ function App() {
           </p>
         </div>
 
-        {/* AI Operations Section */}
-        <section style={{ marginTop: "60px" }}>
+        {/* KubeMedic Diagnostics Panel */}
+        <KubeMedic />
 
-          <div className="version-banner">
+        {/* DeploySense Analyzer Panel */}
+        <DeploySense />
 
-            <div className="version-banner__tag">
-              <span>🤖</span>
-              <span>AI Operations</span>
-            </div>
-
-            <h2 className="version-banner__title">
-              KubeMedic — AI Kubernetes Troubleshooter
-            </h2>
-
-            <p className="version-banner__desc">
-              Analyze Kubernetes pod failures using AI-assisted root cause analysis.
-            </p>
-
-          </div>
-
-          <div style={{ marginTop: "30px" }}>
-            <KubeMedic />
-          </div>
-
-        </section>
-        <section style={{ marginTop: "60px" }}>
-
-          <div className="version-banner">
-            <div className="version-banner__tag">
-              <span>⚙️</span>
-              <span>DeploySense</span>
-            </div>
-
-            <h2 className="version-banner__title">
-              DeploySense — AI-Powered CI/CD Failure Analysis
-            </h2>
-
-            <p className="version-banner__desc">
-              Paste your CI/CD logs and get instant AI-powered root cause analysis, suggested fixes, and prevention strategies.
-            </p>
-          </div>
-
-          <div style={{ marginTop: "30px" }}>
-            <DeploySense />
-          </div>
-
-        </section>
 
         {/* Footer */}
         <footer className="app-footer">

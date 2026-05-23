@@ -7,15 +7,12 @@ export default function DeploySense() {
   const [loading, setLoading] = useState(false);
 
   const analyzeLogs = async () => {
-
     if (!logs) return;
 
     setLoading(true);
-
     try {
-
       const response = await fetch(
-        "http://127.0.0.1:8000/api/ai/deploysense",
+        "/api/ai/deploysense",
         {
           method: "POST",
           headers: {
@@ -31,55 +28,120 @@ export default function DeploySense() {
       }
 
       const data = await response.json();
-
       setResult(data);
-
     } catch (err) {
-
       console.error("Fetch error:", err);
-
     } finally {
-
       setLoading(false);
-
     }
   };
 
+  const getFailureTypeClass = (type) => {
+    const t = String(type || "").toLowerCase();
+    if (t.includes("build")) return "analysis-card--warning";
+    if (t.includes("docker")) return "analysis-card--info";
+    if (t.includes("kube")) return "analysis-card--cyan";
+    if (t.includes("network") || t.includes("auth")) return "analysis-card--error";
+    return "analysis-card--info";
+  };
+
+  const getFailureHeaderClass = (type) => {
+    const t = String(type || "").toLowerCase();
+    if (t.includes("build")) return "analysis-card__header--warning";
+    if (t.includes("docker")) return "analysis-card__header--info";
+    if (t.includes("kube")) return "analysis-card__header--cyan";
+    if (t.includes("network") || t.includes("auth")) return "analysis-card__header--error";
+    return "analysis-card__header--info";
+  };
+
   return (
-    <div style={{ marginTop: "60px" }}>
+    <div className="dashboard-section">
+      <div className="section-header">
+        <div className="section-header__tag">
+          <span>⚡</span>
+          <span>CI/CD SRE Diagnostic</span>
+        </div>
+        <h2 className="section-header__title">DeploySense Analyzer</h2>
+        <p className="section-header__desc">
+          Paste error logs from your build runner (Docker compilation, test stages, or deployment runs) to isolate failure modes and generate a step-by-step remediation plan.
+        </p>
+      </div>
 
-      <h1>🚀 DeploySense</h1>
+      <div className="form-group">
+        <label className="form-label" htmlFor="log-textarea">Pipeline Console Logs</label>
+        <textarea
+          id="log-textarea"
+          className="textarea-input"
+          rows="10"
+          placeholder="Paste console build failure logs here..."
+          value={logs}
+          onChange={(e) => setLogs(e.target.value)}
+        />
+      </div>
 
-      <textarea
-        rows="10"
-        placeholder="Paste CI/CD logs here..."
-        value={logs}
-        onChange={(e) => setLogs(e.target.value)}
-        style={{ width: "100%", marginBottom: "10px" }}
-      />
-
-      <button onClick={analyzeLogs}>
-        {loading ? "Analyzing..." : "Analyze Logs"}
+      <button
+        className="btn-primary"
+        onClick={analyzeLogs}
+        disabled={loading || !logs}
+      >
+        {loading ? (
+          <>
+            <span className="spinner" />
+            <span>Analyzing logs...</span>
+          </>
+        ) : (
+          <>
+            <span>⚡</span>
+            <span>Analyze Console Logs</span>
+          </>
+        )}
       </button>
 
       {result && (
-        <div style={{ marginTop: "20px" }}>
+        <div className="results-container">
+          <h3 className="results-title">
+            <span>🔍</span> DeploySense Diagnostic Report
+          </h3>
 
-          <h3>Root Cause</h3>
-          <p>{result.root_cause}</p>
+          <div className="results-grid">
+            <div className="analysis-card analysis-card--error">
+              <div className="analysis-card__header analysis-card__header--error">
+                <span>🚨</span> Root Cause
+              </div>
+              <div className="analysis-card__body">
+                {result.root_cause}
+              </div>
+            </div>
 
-          <h3>Failure Type</h3>
-          <p>{result.failure_type}</p>
+            <div className={`analysis-card ${getFailureTypeClass(result.failure_type)}`}>
+              <div className={`analysis-card__header ${getFailureHeaderClass(result.failure_type)}`}>
+                <span>⚠️</span> Failure Domain
+              </div>
+              <div className="analysis-card__body">
+                Identified failure type: <strong>{result.failure_type || "unspecified"}</strong>.
+              </div>
+            </div>
 
-          <h3>Suggested Fix</h3>
-          <p>{result.suggested_fix}</p>
+            <div className="analysis-card analysis-card--success">
+              <div className="analysis-card__header analysis-card__header--success">
+                <span>✅</span> Suggested Fix
+              </div>
+              <div className="analysis-card__body">
+                {result.suggested_fix}
+              </div>
+            </div>
 
-          <h3>Prevention</h3>
-          <p>{result.prevention}</p>
-
+            <div className="analysis-card analysis-card--info">
+              <div className="analysis-card__header analysis-card__header--info">
+                <span>🛡️</span> Prevention Strategy
+              </div>
+              <div className="analysis-card__body">
+                {result.prevention}
+              </div>
+            </div>
+          </div>
         </div>
       )}
-
     </div>
   );
-}
+}

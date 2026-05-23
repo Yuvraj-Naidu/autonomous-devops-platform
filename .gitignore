@@ -32,12 +32,12 @@ Thumbs.db
 .terraform/
 *.tfstate
 *.tfstate.*
+*.tfstate.backup
+*.tfvars
 crash.log
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
 
-# Node
-node_modules/
-build/
+project_review.md
