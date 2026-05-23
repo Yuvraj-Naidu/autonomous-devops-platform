@@ -1,0 +1,331 @@
+/* ===== EVOLUTION TIMELINE ===== */
+.evo {
+  margin-bottom: 48px;
+  padding: 40px 32px;
+  background: rgba(13, 13, 20, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: fadeUp 0.8s ease-out 0.5s both;
+  position: relative;
+  overflow: hidden;
+}
+
+.evo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), transparent 40%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.evo__header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.evo__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: rgba(124, 58, 237, 0.1);
+  color: #8b5cf6;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  margin-bottom: 14px;
+}
+
+.evo__title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, #f1f5f9, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.evo__subtitle {
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* Timeline Track */
+.evo__track {
+  position: relative;
+  padding: 0 8px;
+  margin-bottom: 28px;
+}
+
+.evo__line {
+  position: absolute;
+  top: 24px;
+  left: 40px;
+  right: 40px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  z-index: 0;
+}
+
+.evo__line-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed, #6366f1, #22d3ee);
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+}
+
+/* Nodes */
+.evo__nodes {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.evo__node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.evo__node-dot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 13, 20, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.evo__node-icon {
+  font-size: 18px;
+  color: #94a3b8; /* Faint slate gray by default for unreached nodes */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.evo__node--reached .evo__node-dot {
+  border-color: var(--node-color);
+}
+
+.evo__node--reached .evo__node-icon {
+  color: var(--node-color); /* Stage color for reached nodes */
+  opacity: 0.85;
+}
+
+.evo__node--active .evo__node-dot {
+  border-color: var(--node-color);
+  background: rgba(13, 13, 20, 0.7);
+  box-shadow:
+    0 0 20px -4px var(--node-color),
+    0 0 40px -8px var(--node-color),
+    inset 0 0 12px -4px var(--node-color);
+  transform: scale(1.15);
+}
+
+.evo__node--active .evo__node-icon {
+  color: var(--node-color); /* Active stage color */
+  opacity: 1;
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px var(--node-color));
+}
+
+.evo__node-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  transition: color 0.3s ease;
+}
+
+.evo__node--active .evo__node-label {
+  color: #f1f5f9;
+}
+
+.evo__node:hover .evo__node-dot {
+  border-color: var(--node-color);
+  box-shadow: 0 0 16px -4px var(--node-color);
+}
+
+.evo__node:hover .evo__node-icon {
+  opacity: 1;
+}
+
+/* Detail Card */
+.evo__detail {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  animation: detailSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes detailSlide {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.evo__detail-accent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 3px;
+}
+
+.evo__detail-content {
+  flex: 1;
+  padding-left: 8px;
+}
+
+.evo__detail-number {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.evo__detail-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+
+.evo__detail-desc {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.evo__detail-icon {
+  font-size: 36px;
+  color: var(--node-color);
+  opacity: 0.85;
+  filter: drop-shadow(0 0 8px var(--node-color));
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Indicator Dots */
+.evo__dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.evo__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.evo__dot--active {
+  background: var(--dot-color);
+  box-shadow: 0 0 10px var(--dot-color);
+  transform: scale(1.3);
+}
+
+.evo__dot:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .evo {
+    padding: 28px 18px;
+  }
+
+  .evo__node-dot {
+    width: 36px;
+    height: 36px;
+  }
+
+  .evo__node-icon {
+    font-size: 14px;
+  }
+
+  .evo__node-label {
+    font-size: 9px;
+  }
+
+  .evo__line {
+    top: 18px;
+    left: 24px;
+    right: 24px;
+  }
+
+  .evo__detail {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .evo__detail-accent {
+    width: 100%;
+    height: 3px;
+    left: 0;
+    top: 0;
+    bottom: auto;
+  }
+
+  .evo__detail-content {
+    padding-left: 0;
+  }
+}

@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
 import KubeMedic from "./components/KubeMedic";
 import DeploySense from "./components/DeploySense";
+import EvolutionTimeline from "./components/EvolutionTimeline";
 
 function App() {
   const [health, setHealth] = useState("Loading...");
   const [dbStatus, setDbStatus] = useState("Loading...");
   const [lastChecked, setLastChecked] = useState(null);
   const [version, setVersion] = useState("");
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // Refs for scroll-into-view
+  const toolsSectionRef = useRef(null);
 
   useEffect(() => {
     fetch("/api/health")
-      //fetch("http://127.0.0.1:49320/health")
       .then(res => res.json())
       .then(data => {
         setHealth(data.status);
@@ -20,7 +24,6 @@ function App() {
       .catch(() => setHealth("Error"));
 
     fetch("/api/db-check")
-      //fetch("http://127.0.0.1:49320/db-check")
       .then(res => res.json())
       .then(data => setDbStatus(data.database_connection))
       .catch(() => setDbStatus("Error"));
@@ -48,6 +51,13 @@ function App() {
     return "Operational";
   };
 
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+    if (tab !== "overview" && toolsSectionRef.current) {
+      toolsSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="app-container">
       {/* Animated background elements */}
@@ -63,6 +73,29 @@ function App() {
             <div className="top-bar__logo">🚀</div>
             <span className="top-bar__title">DevOps Platform</span>
             <span className="top-bar__badge">{version}</span>
+          </div>
+          <div className="top-bar__nav">
+            <button
+              className={`nav-tab ${activeTab === "overview" ? "nav-tab--active" : ""}`}
+              onClick={() => handleTabClick("overview")}
+            >
+              <span className="nav-tab__icon">📊</span>
+              <span>Overview</span>
+            </button>
+            <button
+              className={`nav-tab ${activeTab === "kubemedic" ? "nav-tab--active nav-tab--medic" : ""}`}
+              onClick={() => handleTabClick("kubemedic")}
+            >
+              <span className="nav-tab__icon">🤖</span>
+              <span>KubeMedic</span>
+            </button>
+            <button
+              className={`nav-tab ${activeTab === "deploysense" ? "nav-tab--active nav-tab--deploy" : ""}`}
+              onClick={() => handleTabClick("deploysense")}
+            >
+              <span className="nav-tab__icon">⚡</span>
+              <span>DeploySense</span>
+            </button>
           </div>
           <div className="top-bar__status">
             <span className="top-bar__dot" />
@@ -137,6 +170,62 @@ function App() {
           </div>
         </div>
 
+        {/* Evolution Timeline */}
+        <EvolutionTimeline />
+
+        {/* Tools Section with Tabs */}
+        <div ref={toolsSectionRef} className="tools-section">
+          <div className="tools-section__header">
+            <h2 className="tools-section__title">AI-Powered Tools</h2>
+            <p className="tools-section__desc">
+              Select a tool below to interact with your infrastructure
+            </p>
+          </div>
+
+          {/* Tool Selector Cards */}
+          <div className="tool-selector">
+            <button
+              className={`tool-card ${activeTab === "kubemedic" ? "tool-card--active tool-card--medic" : ""}`}
+              onClick={() => setActiveTab("kubemedic")}
+            >
+              <div className="tool-card__glow" />
+              <div className="tool-card__icon">🤖</div>
+              <div className="tool-card__content">
+                <h3 className="tool-card__name">KubeMedic</h3>
+                <p className="tool-card__desc">Pod diagnostics & root-cause analysis</p>
+              </div>
+              <div className="tool-card__arrow">→</div>
+            </button>
+            <button
+              className={`tool-card ${activeTab === "deploysense" ? "tool-card--active tool-card--deploy" : ""}`}
+              onClick={() => setActiveTab("deploysense")}
+            >
+              <div className="tool-card__glow" />
+              <div className="tool-card__icon">⚡</div>
+              <div className="tool-card__content">
+                <h3 className="tool-card__name">DeploySense</h3>
+                <p className="tool-card__desc">CI/CD log analysis & failure detection</p>
+              </div>
+              <div className="tool-card__arrow">→</div>
+            </button>
+          </div>
+
+          {/* Tool Content Area */}
+          <div className="tool-content">
+            {activeTab === "kubemedic" && <KubeMedic />}
+            {activeTab === "deploysense" && <DeploySense />}
+            {activeTab === "overview" && (
+              <div className="tool-placeholder">
+                <div className="tool-placeholder__icon">🛠️</div>
+                <h3 className="tool-placeholder__title">Select a Tool</h3>
+                <p className="tool-placeholder__desc">
+                  Choose KubeMedic or DeploySense above to start analyzing your infrastructure.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Version Banner */}
         <div className="version-banner">
           <div className="version-banner__tag">
@@ -150,13 +239,6 @@ function App() {
             CI/CD automated • Zero-downtime deploy • Kubernetes orchestration • Ingress routing • Fully operational
           </p>
         </div>
-
-        {/* KubeMedic Diagnostics Panel */}
-        <KubeMedic />
-
-        {/* DeploySense Analyzer Panel */}
-        <DeploySense />
-
 
         {/* Footer */}
         <footer className="app-footer">
