@@ -30,7 +30,11 @@ def analyze_k8s_logs(logs: str):
             temperature=0.2
         )
 
-        content = response.choices[0].message.content
+        content = response.choices[0].message.content.strip()
+
+        # Clean common LLM issues
+        if content.startswith("```"):
+            content = content.replace("```json", "").replace("```", "").strip()
 
         return json.loads(content)
 
