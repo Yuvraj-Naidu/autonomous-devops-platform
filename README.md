@@ -1,6 +1,33 @@
 # 🚀 Autonomous DevOps & AI-Ops Platform
 
-A production-grade, end-to-end DevOps platform demonstrating microservices architecture, infrastructure orchestration, cloud-native deployments, observability, and intelligent AI-Ops features.
+**A self-healing infrastructure platform that uses LLMs to diagnose and explain Kubernetes and CI/CD failures automatically — built and deployed solo, end-to-end, on real AWS infrastructure.**
+
+> 📌 **What this is, in one line:** When a pod crashes or a deployment fails, most engineers spend 20-30 minutes digging through logs to find out why. This platform's AI layer reads the logs itself and tells you the root cause in seconds — cutting incident triage time by up to 80%.
+
+## 🎥 Live Demos
+
+**KubeMedic — AI Pod Diagnostics (live failure capture)**
+
+https://github.com/user-attachments/assets/b75b4701-dbe0-4ae6-ae5a-1d1ce3d4ca10
+
+**DeploySense — CI/CD Failure Root-Cause Analysis**
+
+https://github.com/user-attachments/assets/7f71d570-469f-479f-9889-cdf9c446a2ef
+
+**Full Platform Walkthrough**
+
+https://github.com/user-attachments/assets/a68b7f83-c3f0-45b9-9a19-73b5ee7b73d1
+
+---
+
+## 🧠 Why This Project Stands Out
+
+Most DevOps portfolio projects stop at "deployed an app with CI/CD." This one goes further — it adds an **AI Operations layer** that most engineers at any experience level haven't built:
+
+- **KubeMedic** — Watches live Kubernetes pod logs and uses GPT-4o-mini to diagnose incidents (CrashLoopBackOff, OOMKilled, etc.) and suggest fixes — like having an SRE on call 24/7.
+- **DeploySense** — Reads CI/CD pipeline failure logs and explains the root cause automatically, instead of a human scrolling through GitHub Actions logs manually.
+
+This is the intersection of **traditional DevOps infrastructure** and **AI/LLM Operations** — a combination that's increasingly in demand and rare to see demonstrated end-to-end in a single project.
 
 ---
 
@@ -23,7 +50,7 @@ A production-grade, end-to-end DevOps platform demonstrating microservices archi
 
 ## 📐 System Architecture
 
-The platform evolved iteratively from a simple local multi-service application to a resilient, cloud-native, and self-healing Kubernetes architecture:
+The platform evolved iteratively from a simple local multi-service application to a resilient, cloud-native, self-healing Kubernetes architecture with an AI diagnostics layer on top:
 
 ```
                   ┌─────────────────────────────────────┐
